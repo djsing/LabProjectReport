@@ -1,11 +1,24 @@
 #!/bin/bash
 
+echo "Making Main"
 echo -ne '\n' | pdflatex main
 bibtex main
-bibtex body
+echo -ne '\n' | pdflatex main
+echo -ne '\n' | pdflatex main
+
+echo "Making Appendix 1"
+echo -ne '\n' | pdflatex appendix1
 bibtex appendix1
-bibtex appendix2
+echo -ne '\n' | pdflatex appendix1
+echo -ne '\n' | pdflatex appendix1
+
+echo "Making Appendix 3"
+echo -ne '\n' | pdflatex appendix3
 bibtex appendix3
-echo -ne '\n' | pdflatex main
-echo -ne '\n' | pdflatex main
+echo -ne '\n' | pdflatex appendix3
+echo -ne '\n' | pdflatex appendix3
+
+echo "Merging PDF"
+python merge.py
+
 ./cleanfiles
