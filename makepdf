@@ -2,5 +2,9 @@
 
 echo -ne '\n' | pdflatex main
 bibtex main
+bibtex body
+bibtex appendix1
+bibtex appendix2
+bibtex appendix3
 echo -ne '\n' | pdflatex main
 echo -ne '\n' | pdflatex main
