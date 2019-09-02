@@ -20,5 +20,5 @@ echo -ne '\n' | pdflatex appendix3
 
 echo "Merging PDF"
 python merge.py
-
+echo "Cleaning Files"
 ./cleanfiles
