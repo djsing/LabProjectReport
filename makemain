@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Making Main"
+echo -ne '\n' | pdflatex main
+bibtex main
+echo -ne '\n' | pdflatex main
+echo -ne '\n' | pdflatex main
