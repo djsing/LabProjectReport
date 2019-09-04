@@ -208,7 +208,7 @@ The final dataset that was used contained 465 photographs.
 Drawing from the previously discussed literature, the following sections describe methodology employed to achieve each component and subsystem implementation described above.
 The chosen technologies used for this system is Python, due to its open-source nature, large online community support, and its growing popularity in the Machine Learning field.
 \subsection{Extraction Layer}
-\subsubsection{Reference Object Detection and Segmentation}
+\subsubsection{Reference Object Detection and Segmentation} \label{refobdetseg}
 The purpose of Reference Object Detection is to extract the pixels per meter metric from the photograph, since this metric is used for all subsequent data extraction in the succeeding components such as the person's height, silhouette area, widths and depths.
 Two methods have been used to extract the RO from the photograph, both of which make extensive use of the OpenCV-Python library.
 Method One is the primary operation, while Method Two is activated if Method One fails during runtime.
@@ -283,7 +283,23 @@ Note that the Front and Side View models were first trained, and the best perfor
 The final architecture of the Front model was 4-3-2-1, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
 The final architecture of the Side and Compensation models were 4-3-2-1 and 4-3-2-1 respectively.
 \section{Sources of Error}
-
+As expected when performing feature extraction on a photographic dataset, the system design either had to account for or circumvent various errors in the dataset.
+The following errors were circumvented by creating a Method One as described in Section \ref{refobdetseg}:
+\begin{itemize}
+	\item Poorly lit photographs, or non-uniform low-contrasting backgrounds that cause the reference object to be confused with the background.
+	\item The person being too close to or making contact with the reference object.
+	\item Another object being more to the left of the photograph than the reference object.
+\end{itemize}
+The following errors were circumvented by combining the masks produced by foreground extraction and the Mask-RCNN:
+\begin{itemize}
+	\item The person being in contact with another object that would affect normal edge detection.
+	\item The photograph containing other large objects that were in the foreground with the person.
+\end{itemize}
+Unfortunately there are some errors that could not be accounted for or circumvented, and must be prevented in any future data collection:
+\begin{itemize}
+	\item Taking front and side photographs from an angle such that the reference object is seen as behind the person instead of alongside them.
+	\item A more pronounced error of parallax in side photographs due to the reference object being a person-width behind the side surface of the person being photographed, resulting in the side dimension extractions being slightly exaggerated.
+\end{itemize}
 \section{Findings \& Analysis}
 
 \section{Additional Features}
@@ -298,6 +314,6 @@ The final architecture of the Side and Compensation models were 4-3-2-1 and 4-3-
 \bibliography{references}
 \end{document}
 
-%% paralax error because side photos have the side of people in front of the ref object
+%% RECOMM: IN FUTURE, NO paralax error because side photos have the side of people in front of the ref object
 % ReLu neuron death
 % interactive black threshold chooser
