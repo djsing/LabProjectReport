@@ -69,25 +69,17 @@ Furthermore, this solution would not be affected by measurement errors resulting
 \end{itemize}
 
 \section{Literature Review}
-\subsection{Weight and Diameter Estimation}
+\subsection{Weight and Diameter Estimation of Apples}
 Comert et al. aims to estimate the mass of an apple through image processing and machine learning techniques \cite{comert}.
-The original apple image is seen as the top left image of Figure \ref{fig:segmentedapples}.
-The process involves using the Prewitt edge extraction algorithm in order to obtain a binary image, seen as the top right image of Figure \ref{fig:segmentedapples}.
-The binary image goes through Closing, filtering and Opening.
+The process involves performing edge detection on the original image using the Prewitt edge extraction algorithm, which craetes a binary image containing the edges in the original image.
+The binary image then undergoes Closing, filtering and Opening.
 
 Closing is the process of performing Dilation followed by Erosion on an image, whilst Opening is the process of performing Erosion followed by Dilation on an image \cite{opening,closing}.
 Dilation is a morphological operation whereby the value (intensity) of a pixel is increased to that of the pixel in its neighbourhood with the highest intensity \cite{mathworksdilationerosion}.
 Erosion is a morphological operation whereby the value of a pixel is decreased to that of the pixel in its neighbourhood with the lowest intensity \cite{mathworksdilationerosion}.
 
 This is done in order to improve the image quality for feature extraction, since Closing an image improves the prevalence of contours, whilst Opening an image improves the uniformity of the spaces between contours.
-The bottom image of Figure \ref{fig:segmentedapples} shows the binary image after the above operations were performed on it, successfully segmenting the pixels of the apple as white whilst the background is black.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\linewidth]{segmentedapples.jpg}
-    \caption{Segmentation techniques to isolate the apple in the image \cite{comert}.}
-    \label{fig:segmentedapples}
-\end{figure}
+The above operations successfully segmented the image such that the pixels of the apple is white whilst the background is black, seen in the right image of Figure \ref{fig:diameterapples}.
 
 Feature extraction is carried out such that the area and diameter of the apple are extracted seen in Figure \ref{fig:diameterapples}.
 This feature extraction would then be performed on a set of apple photographs whose masses were known.
@@ -184,41 +176,40 @@ All the outputs of the Extraction layer mentioned above are provided as inputs i
 The FVV and SVV are passed into the Front View and Side View components respectively, both of which are neural network models trained on a dataset of FVV's and SVV's, respectively.
 Both networks will have been trained to estimate BMI independently until an acceptable accuracy is achieved, or falling short of that, the best possible accuracy is achieved.
 
-The estimated BMI from the Front View and Side View component are then used as inputs into a final neural network, the Error Correction / Compensation component, which performs a weighted averaging between the Front and Side BMI estimations.
+The estimated BMI from the Front View and Side View component are then used as inputs into a final neural network, the Error Correction / Compensation model, which performs a weighted averaging between the Front and Side BMI estimations.
 This network will have been trained to estimate BMI by deciding the contribution that the Front and Side view estimates should make towards a final BMI estimation with improved accuracy.
 \section{Training Data Collection}
+As mentioned above, the layer of the system that performs the BMI prediction makes extensive use of neural network models.
+Thus in order to train these models, a dataset containing photographs of people with their corresponding BMI was required.
 \subsection{Ethics Approval}
+This study was approved by The University of the Witwatersrand Human Research Ethics Committee (Medical), Certificate Number M190539.
+The committee approved the anonymised collection of the height, mass, age, sex, and a single front and side-facing full-body photograph of 500 fully clothed participants.
 \subsection{Collaboration with the PHRU}
-The PHRU have provided clinical research staff
-\subsection{Data Types}
-The data to be collected are as follows:
+The PHRU provided clinical research staff who aided in the collection of the above data.
+Each person was issued an arbitrary subject number that was attached to each anonymised photograph.
+The dataset was collected at three sites:
+\begin{itemize}
+	\item PHRU MDR Tuberculosis (TB) Research Clinic in Klerksdorp.
+	\item PHRU TB Clinic in Chris Hani Baragwanath Academic Hospital in Soweto.
+	\item The Chamber of Mines building at the University of the Witwatersrand.
+\end{itemize}
+Data was collected at the last site by the two principal investigators of the study.
+\subsection{Data Point Composition}
+As mentioned above, the data collected was as follows:
 \begin{itemize}
 \item A front and side photograph of the subject.
-Both photographs should have the reference object in the top left corner of the image.
-As mentioned above, the background of the image should be a uniform surface such as a wall.
-This is to ensure that the image pre-processing techniques described in the succeeding sections of this report can be carried out without error.
+Both photographs had the reference object in the top left corner of the image.
 \item The height and mass of each person.
-These must be captured simultaneously and attached to the front and side photographs.
-Data survey applications such as \textit{REDCap} may be useful in achieving this.
+These were captured simultaneously and linked to the persons subject number using the \textit{REDCap} application.
 \item (Optional) Sex of person in each photograph.
-Whilst this characteristic is not an input into the system, it should be recorded for statistical purposes for later quantification of algorithmic bias.
-Furthermore, to achieve the optional criteria discussed above, data points must be labelled as male/female to train separate models.
-\item (Optional) Race of person in each photograph.
-This characteristic could also be recorded for statistical purposes.
-Furthermore, it opens an avenue for further research into how ethnicity can be used to narrow BMI distribution and hence provide more accurate BMI estimations.
+Whilst this characteristic is not an input into the system, it was recorded for statistical purposes.
+Furthermore, to achieve the optional criteria discussed in preceeding sections, data points must be labelled as male/female to train separate models.
 \item (Optional) Age of person in each photograph.
 This characteristic, despite only being recorded for statistical purposes, is by far the largest contributor to the distribution of BMI, as seen in Ref. \cite{bmiage}.
-Knowing the distribution of the age of the subjects will provide a range of ages where the program is likely to provide the most accurate estimation.
+Knowing the distribution of the age of the subjects may provide a range of ages where the program is likely to provide the most accurate estimation.
 \end{itemize}
-With the ultimate aim in mind for this program to be a universal BMI estimator, it is encouraged that the data-set of subjects who volunteer to be photographed be spread in terms of sex, ethnicity and age.
-\subsection{Obtaining Data}
-It is possible to find such images of people on the internet, however it is unlikely for these images to have the corresponding height and mass on record.
-The chosen method for obtaining the data is to illicit the help of a medical research group who have access to large amounts of people, along with properly calibrated height and mass measuring equipment.
-
-It should be noted that obtaining data in this manner requires prior clearance from a recognised ethics committee, as well as the permission of those in charge of the proposed sites such as research clinics.
-As with most neural network related projects, it is encouraged for a large data-set to be collected, and it was decided that a reasonable minimum number of subjects would be 100.
-
-
+With the ultimate aim in mind for this program to be a universal BMI estimator, it was encouraged that the data-set of subjects who volunteer to be photographed be spread in terms of sex, ethnicity and age.
+The final dataset that was used contained 465 photographs.
 
 \section{Methodology}
 
@@ -239,3 +230,4 @@ As with most neural network related projects, it is encouraged for a large data-
 \end{document}
 
 %% paralax error because side photos have the side of people in front of the ref object
+% ReLu neuron death
