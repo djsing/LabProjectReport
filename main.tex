@@ -6,11 +6,12 @@
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage[T1]{fontenc}
-\title{ELEN4002: Digital Estimation of Body Mass Index}
-\author{Darrion Singh (1056673)}
+\title{\huge{ELEN4002: Digital Estimation of Body Mass Index} \vspace{-6pt}}
+\author{Darrion Singh (1056673) \vspace{-6pt}}
 
 \begin{document}
 \bstctlcite{IEEEexample:BSTcontrol}
+\vspace{-6pt}
 \maketitle
 
 \begin{abstract}
@@ -42,9 +43,9 @@ Furthermore, this solution would not be affected by measurement errors resulting
 \begin{itemize}
 	\item As to provide the least chance of a false human body outline being detected, we assume that any person being photographed is staged in front of a uniform background, such as a wall whose colour significantly contrasts with that of the patient and their clothes.
 	It is further assumed that all photographs used to train the machine learning algorithm should abide by the same assumption.
-	\item In order to provide a measurement reference, the person in each photograph should be standing next to a reference object of known dimensions, such as a piece of standard A4 paper. The colour and dimensions of the piece of paper should be the same throughout the training dataset.
-	\item This reference object is present in the photographs during any live testing or usage of the application.
-	\item All subjects in the photographs stand alongside and in line with the reference object, i.e. if the reference object is stuck to a wall, the subject is standing against the wall.
+	\item In order to provide a measurement reference, the person in each photograph should be standing next to a reference object (RO) of known dimensions, such as a piece of standard A4 paper. The colour and dimensions of the piece of paper should be the same throughout the training dataset.
+	\item This RO is present in the photographs during any live testing or usage of the application.
+	\item All subjects in the photographs stand alongside and in line with the RO, i.e. if the RO is stuck to a wall, the subject is standing against the wall.
 	\item The distance between the camera and the subjects being photographed is constant and far enough away to capture the subject's full body photograph.
 	\item Subjects have a maximum height of two meters.
 	\item The time frame for this project is six weeks, with a total budget of R1200.
@@ -113,14 +114,6 @@ Figure \ref{fig:pigskeleton} shows the skeletonisation process for the image of 
 Using this process the spine (main branch) is used to estimate the length of the pig by counting the pixels which comprise the spine.
 Thereafter, the estimated spine length and recorded pig masses were related using a linear regression model.
 
-\subsection{Human Weight from a RGB-D Image}
-Nguyen et al. explores human mass prediction through a single RGB-D image \cite{nguyen2014seeing}.
-The camera in question uses a depth sensor to create a separate depth image. 
-This extra image proves to be useful in object detection due to depth allowing an accurate trace of the human body shape with the aid of the 2D RGB image. 
-
-This silhouette is passed through similar image processing methods used in the aforementioned papers. 
-However, mass prediction is different in this scenario as the author used various mathematical relationships relating body width, height and area with Support Vector Regression to predict the mass of the person through the extracted features.
-
 \subsection{Types of Neural Networks}
 Mehta discusses the various types of neural networks and what applications in which they prove to be useful \cite{mehta_2019}. 
 The summary is as follows:
@@ -144,16 +137,16 @@ These subsystems have no dependency on each other and are to be built independen
 Figure \ref{fig:systemblockdiagram} in Appendix 5 provides a system diagram showing the inputs and outputs of each system, as well as the components of each system.
 The Extraction layer comprises of the Object Detection, Image Segmentation and Input Extraction components, whilst the Machine Learning layer comprises of the Front View, Side View and Weighted Averaging components.
 \subsection{Extraction Layer}
-A front and side view photograph of a person with the aforementioned reference object in the top left corner is the input into the system.
-For the sake of clarity and simplicity, the reference object chosen is a standard A3 cardboard, and its chosen colour is black for the sake of high contrast with the assumed light coloured wall in the background.
-The Object Detection component will isolate the two objects in the photograph, namely the person and the reference object, and return the bounding box for each.
-The width of the bounding box surrounding the reference object is measured in pixels.
+A front and side view photograph of a person with the aforementioned RO in the top left corner is the input into the system.
+For the sake of clarity and simplicity, the RO chosen is a standard A3 cardboard, and its chosen colour is black for the sake of high contrast with the assumed light coloured wall in the background.
+The Object Detection component will isolate the two objects in the photograph, namely the person and the RO, and return the bounding box for each.
+The width of the bounding box surrounding the RO is measured in pixels.
 Knowing its physical width allows us to calculate the pixels per meter ratio for that photograph.
-In other words, all objects that exist in line with the reference object will be represented by approximately the same number of pixels per meter as that object.
+In other words, all objects that exist in line with the RO will be represented by approximately the same number of pixels per meter as that object.
 This technique was inspired by Ref. \cite{objectDetection}.
 
-For both the front and side view photographs the Image Segmentation component will receive the locations of the reference object and the person in the form of their bounding boxes.
-Using the bounding boxes, both the reference object's and person's pixel mask (all pixels belonging to an object) will be extracted for both the front and side photographs.
+For both the front and side view photographs the Image Segmentation component will receive the locations of the RO and the person in the form of their bounding boxes.
+Using the bounding boxes, both the RO's and person's pixel mask (all pixels belonging to an object) will be extracted for both the front and side photographs.
 
 Using the pixels per meter found earlier the Input Extraction component performs feature extraction on the person's front and side pixel masks.
 Six features are extracted from each pixel mask:
@@ -198,7 +191,7 @@ Data was collected at the last site by the two principal investigators of the st
 As mentioned above, the data collected was as follows:
 \begin{itemize}
 \item A front and side photograph of the subject.
-Both photographs had the reference object in the top left corner of the image.
+Both photographs had the RO in the top left corner of the image.
 \item The height and mass of each person.
 These were captured simultaneously and linked to the persons subject number using the \textit{REDCap} application.
 \item (Optional) Sex of person in each photograph.
@@ -212,7 +205,83 @@ With the ultimate aim in mind for this program to be a universal BMI estimator, 
 The final dataset that was used contained 465 photographs.
 
 \section{Methodology}
+Drawing from the previously discussed literature, the following sections describe methodology employed to achieve each component and subsystem implementation described above.
+The chosen technologies used for this system is Python, due to its open-source nature, large online community support, and its growing popularity in the Machine Learning field.
+\subsection{Extraction Layer}
+\subsubsection{Reference Object Detection and Segmentation}
+The purpose of Reference Object Detection is to extract the pixels per meter metric from the photograph, since this metric is used for all subsequent data extraction in the succeeding components such as the person's height, silhouette area, widths and depths.
+Two methods have been used to extract the RO from the photograph, both of which make extensive use of the OpenCV-Python library.
+Method One is the primary operation, while Method Two is activated if Method One fails during runtime.
+Method One is as follows:
+\begin{itemize}
+	\item Knowing that the RO is black, the image was filtered of all pixels whose 8-bit colour fell outside of the gray range of 0 -- 150, where 0 is pure black and 255 is white, such that the remaining pixels were considered as the 'black' pixels of the image.
+	The value of 150 was chosen experimentally, as to account for lighting in the photographs causing the RO to appear slightly lighter than it should.
+	\item The filtering produced a binary image which showed the positions of black pixels in the image.
+	Edge detection (using the OpenCV implementation of the Canny algorithm) was performed on the filtered image, returning all contours in the image.
+	\item OpenCV's Polygon approximation was then performed on the contours that were returned.
+	This returned all contours in the photograph that have four verticies (rectangular).
+	The contours were ordered from left to right, and the left most contour was assumed to belong to the RO, and returned it.
+\end{itemize}
+This method is precise since it searches for a specific type of contour from a specific subset of the pixels in the image, and was partially inspired by Ref. \cite{blackShapeDetection}.
+Unfortunately, whilst this method works for most images there are instances where the lighting in the room caused the pixels which comprise the RO to be so brightened that it fell outside the range of gray specified above.
+In this case, no rectangular contours would be returned, triggering Method Two as a failsafe. 
+Method Two is as follows:
+\begin{itemize}
+	\item The image is first converted to grayscale and slightly blurred to reduce noise.
+	\item Morphological closing is performed on the image to fill in gaps that may prevent contour detection.
+	\item Edge detection was performed, and returned all contours in the image, ordered from left to right.
+	\item Smaller contours arising from noise were excluded on the basis of the pixel area contained within.
+\end{itemize}
 
+This method (inspired by Ref. \cite{objectDetection}), whilst more reliable in finding the contour of the RO, is far more susceptible to noise in the image.
+As a result, it is susceptible to returning a distorted RO contour.
+Furthermore, it is also susceptible to non-rectangular objects appearing to the left of the RO being falsely returned as the RO (due to the left most object being assumed as the RO).
+Using the known dimensions of the RO, the pixels per meter metric is found and returned.
+
+\subsubsection{Person Detection and Segmentation}
+The purpose of Person Detection is to return the pixel mask of the person in the image and extract that the aforementioned FVV and SVV.
+Using the key assumption stated earlier that the person in the photograph is standing in front of a uniform background, the following method was developed (partially inspired by Ref. \cite{maskrcnnDetection}):
+\begin{itemize}
+	\item The Mask-RCNN model developed in Ref \cite{maskrcnn} was used to detect the Region of Interest (ROI) that contained the person -- their bounding box.
+	This pretrained model has been trained on the MS COCO dataset to detect people, among other common objects, and return an approximate (rough) pixel mask of the person \cite{mscoco}.
+	\item The bounding box returned from the Mask-RCNN was then used to perform foreground extraction on the corresponding ROI in the original image (using the OpenCV implementation of the GrabCut algorithm), returning the pixel mask of the extracted foreground.
+	\item The foreground-produced mask more accurately defines the silhouette but is susceptible to noise due to nearby objects, whilst the CNN-produced mask provides an approximate shape of the person but is almost unaffected by nearby objects.
+	\item These two pixel masks are combined using the bitwise-AND operation, such that the final pixel mask only contains pixels found in both the foreground-produced and CNN-produced masks.
+\end{itemize}
+The returned pixel mask was rid of zero rows as to crop the top and botton of the mask.
+The number of rows in the remaining image was taken as the pixel height of the person, and converted using the pixels per meter meteric to a physical height.
+The pixels per meter meteric was used to calculate physical area per pixel.
+The pixels in the mask were summed and then converted to physical area using this metric.
+
+The image was then approximated into eight sections, to represent the eight distinct regions of the body: Head, Neck, Thorax, Abdomen, Pelvis, Upper Leg, Lower Leg, Foot \cite{bodyproportions}.
+The row with the largest number of pixels (maximum thickness) of the Thorax, Abdomen, Pelvis and Upper Leg regions were then extracted and converted to physical dimensions.
+Altogther, these features made the FVV and SVV.
+
+\subsection{Machine Learning Layer}
+\subsubsection{Model Choice and Evaluation}
+As per consulting the aforementioned Literature Review, it was found that the simplest type of Neural Network that may account for a noisy, small, and potentially linearly inseparable data-set is the Multilayered Perceptron (MLP).
+The Front, Side and Compensation models were all MLP's.
+The models were evaluated by a weighted scoring system that took the maximum deviation from the mean as well as the Mean Absolute Error (MAE) into account.
+MAE (measured in BMI) was considered as the main metric of model loss, since in this particular application, the accuracy of individual results was more important than evaluating the spread of BMI estimations \cite{bmifromface}.
+
+\subsubsection{Training and Final Performance}
+Before training, 20\% of the original dataset was removed to be used later as unseen data during model evaluation.
+The remaining data was used with both the Classical Test-Train split and (Stratified) k-Fold cross validation methods to train the models.
+The Classical method used a 70/30 train/test split for training, whilst the Cross Validation methods used 10 folds.
+
+Different models were trained using different shuffles of data as well as different training parameters such as learning rate, batch size and number of epochs.
+At the end of each complete training cycle, the models were evaluated by exposing them to the unseen data.
+The model which had the lowest combination of MAE and maximum deviation when exposed to completely unseen data was saved as having the best performance.
+The final Model Loss and Training Method for the best performing models were as follows:
+\begin{itemize}
+	\item Front:
+	\item Side:
+	\item Compensation:
+\end{itemize}
+Note that the Front and Side View models were first trained, and the best performing models were used to generate data to train the Compensation model.
+
+The final architecture of the Front model was 4-3-2-1, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
+The final architecture of the Side and Compensation models were 4-3-2-1 and 4-3-2-1 respectively.
 \section{Sources of Error}
 
 \section{Findings \& Analysis}
@@ -231,3 +300,4 @@ The final dataset that was used contained 465 photographs.
 
 %% paralax error because side photos have the side of people in front of the ref object
 % ReLu neuron death
+% interactive black threshold chooser
