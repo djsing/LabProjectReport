@@ -6,9 +6,10 @@
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage[T1]{fontenc}
+\setlength{\textfloatsep}{6pt}
 \title{\huge{ELEN4002: Digital Estimation of Body Mass Index} \vspace{-6pt}}
 \author{Darrion Singh (1056673) \vspace{-6pt}}
-
+%titlesec package for title spacing control
 \begin{document}
 \bstctlcite{IEEEexample:BSTcontrol}
 \vspace{-6pt}
@@ -256,6 +257,14 @@ The pixels in the mask were summed and then converted to physical area using thi
 The image was then approximated into eight sections, to represent the eight distinct regions of the body: Head, Neck, Thorax, Abdomen, Pelvis, Upper Leg, Lower Leg, Foot \cite{bodyproportions}.
 The row with the largest number of pixels (maximum thickness) of the Thorax, Abdomen, Pelvis and Upper Leg regions were then extracted and converted to physical dimensions.
 Altogther, these features made the FVV and SVV.
+A visual representation of the entire Extraction Layer can be seen in Figure \ref{fig:segbeforeafter}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{segbeforeafter.png}
+	\caption{Example photograph (left), reference object segmentation (middle), person segmentation (right).}
+	\label{fig:segbeforeafter}
+\end{figure}
 
 \subsection{Machine Learning Layer}
 \subsubsection{Model Choice and Evaluation}
