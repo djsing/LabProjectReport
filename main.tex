@@ -23,7 +23,7 @@ Whilst not an accurate diagnostic tool, the BMI provides a healthy body mass ran
 Unfortunately, the accurate collection of ones height and mass is time-consuming, especially when considering the time required to collect this data for large amounts of people.
 Furthermore, the distance between rural areas and clinics also inhibit the habitants of the area from regular medical checkups, where a medical practitioner might require to measure and track ones height and mass.
 A possible solution to both the above mentioned problems would be the creation of a tool that would provide a medical practitioner with this information without the need for the patient to be physically present.
-The following report contains a design and implementation of program that estimates BMI from a photograph, using a mixture of Computer Vision and Machine Learning.
+The following report presents a study of a potential technique to estimate BMI from a photograph. It also reports on the design and implementation of program that estimates BMI from a photograph using these techniques, which include a mixture of Computer Vision and Machine Learning.
 The School of Electrical and Information Engineering (EIE) have collaborated with the Peri-Natal HIV Research Unit (PHRU) for this project.
 \section{Background}
 \subsection{Project Concept}
@@ -69,9 +69,6 @@ Furthermore, this solution would not be affected by measurement errors resulting
 \end{itemize}
 
 \section{Literature Review}
-Before deciding on the proposed solution described in the succeeding sections, various academic literature regarding image processing and machine learning were consulted.
-The following provides a summary of findings that were considered when deciding upon the final solution.
-
 \subsection{Weight and Diameter Estimation}
 Comert et al. aims to estimate the mass of an apple through image processing and machine learning techniques \cite{comert}.
 The original apple image is seen as the top left image of Figure \ref{fig:segmentedapples}.
@@ -146,9 +143,49 @@ The paper discusses the estimation of BMI from a photograph using a Deep Convolu
 The analysis was performed on a dataset of 161 photographs that were used to create a set of silhouette images via manual marking as well as automated image processing techniques.
 The silhouette images were standardised to a particular pixel width without changing aspect ratio, and were theereafter padded appropriately and cropped to a square bounding box.
 The silhouette images were augmented via minimal rotations and width shifts, with the author stating that the model could only train sufficiently with augmentation.
-A rather complicated model consisting of seventeen layers was used, details of which can be found in Ref. \cite{bmifromphoto}.
+A rather complicated model consisting of 17 layers was used, details of which can be found in Ref. \cite{bmifromphoto}.
 The results showed the BMI predictions having a correlation of 0.96 with the actual BMI values.
 
+\section{System Design}
+The proposed solution comprises of two subsystems, namely the Extraction layer and the Machine Learning layer.
+These subsystems have no dependency on each other and are to be built independently of one another.
+Figure \ref{fig:systemblockdiagram} in Appendix 5 provides a system diagram showing the inputs and outputs of each system, as well as the components of each system.
+The Extraction layer comprises of the Object Detection, Image Segmentation and Input Extraction components, whilst the Machine Learning layer comprises of the Front View, Side View and Weighted Averaging components.
+\subsection{Extraction Layer}
+A front and side view photograph of a person with the aforementioned reference object in the top left corner is the input into the system.
+For the sake of clarity and simplicity, the reference object chosen is a standard A3 cardboard, and its chosen colour is black for the sake of high contrast with the assumed light coloured wall in the background.
+The Object Detection component will isolate the two objects in the photograph, namely the person and the reference object, and return the bounding box for each.
+The width of the bounding box surrounding the reference object is measured in pixels.
+Knowing its physical width allows us to calculate the pixels per meter ratio for that photograph.
+In other words, all objects that exist in line with the reference object will be represented by approximately the same number of pixels per meter as that object.
+This technique was inspired by Ref. \cite{objectDetection}.
+
+For both the front and side view photographs the Image Segmentation component will receive the locations of the reference object and the person in the form of their bounding boxes.
+Using the bounding boxes, both the reference object's and person's pixel mask (all pixels belonging to an object) will be extracted for both the front and side photographs.
+
+Using the pixels per meter found earlier the Input Extraction component performs feature extraction on the person's front and side pixel masks.
+Six features are extracted from each pixel mask:
+\begin{itemize}
+	\item Their approximate height in meters.
+	\item The approximate two dimensional area contained within their shape (silhouette) in squared meters.
+	\item The maximum thickness of their thoracic region in meters.
+	\item The maximum thickness of their abdominal region in meters.
+	\item The maximum thickness of their pelvic region in meters.
+	\item The maximum thickness of their upper leg region (thigh) in meters.	
+\end{itemize}
+Note that from front images, the 'thickness' is hereafter referred to as 'width' whilst from the side images, 'thickness' is hereafter referred to as 'depth'.
+The four body regions mentioned above have been chosen strategically as to represent common areas of body fat deposit. %*************************FIND REFERENCE*************************************************
+In other words, this study explores the use of Computer Vision and Machine Learning to relate the common regions of body fat deposit to BMI by extracting information about these regions from photographs.
+The output of the Extraction layer is two vectors, namely the front view vector (FVV) and side view vector (SVV).
+Both FVV and SVV will contain the above mentioned features extracted from their respective photograph.
+
+\subsection{Machine Learning Layer}
+All the outputs of the Extraction layer mentioned above are provided as inputs into the Machine Learning layer.
+The FVV and SVV are passed into the Front View and Side View components respectively, both of which are neural network models trained on a dataset of FVV's and SVV's, respectively.
+Both networks will have been trained to estimate BMI independently until an acceptable accuracy is achieved, or falling short of that, the best possible accuracy is achieved.
+
+The estimated BMI from the Front View and Side View component are then used as inputs into a final neural network, the Error Correction / Compensation component, which performs a weighted averaging between the Front and Side BMI estimations.
+This network will have been trained to estimate BMI by deciding the contribution that the Front and Side view estimates should make towards a final BMI estimation with improved accuracy.
 \section{Training Data Collection}
 \subsection{Ethics Approval}
 \subsection{Collaboration with the PHRU}
@@ -182,7 +219,6 @@ It should be noted that obtaining data in this manner requires prior clearance f
 As with most neural network related projects, it is encouraged for a large data-set to be collected, and it was decided that a reasonable minimum number of subjects would be 100.
 
 
-\section{System Design}
 
 \section{Methodology}
 
