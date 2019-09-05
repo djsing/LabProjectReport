@@ -291,13 +291,13 @@ Note that the Front and Side View models were first trained, and the best perfor
 
 The final architecture of the Front model was 4-3-2-1, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
 The final architecture of the Side and Compensation models were 4-3-2-1 and 4-3-2-1 respectively.
-\section{Sources of Error}
+\section{Sources of Error} \label{error}
 As expected when performing feature extraction on a photographic dataset, the system design either had to account for or circumvent various errors in the dataset.
 The following errors were circumvented by creating a Method One as described in Section \ref{refobdetseg}:
 \begin{itemize}
-	\item Poorly lit photographs, or non-uniform low-contrasting backgrounds that cause the reference object to be confused with the background.
-	\item The person being too close to or making contact with the reference object.
-	\item Another object being more to the left of the photograph than the reference object.
+	\item Poorly lit photographs, or non-uniform low-contrasting backgrounds that cause the RO to be confused with the background.
+	\item The person being too close to or making contact with the RO.
+	\item Another object being more to the left of the photograph than the RO.
 \end{itemize}
 The following errors were circumvented by combining the masks produced by foreground extraction and the Mask-RCNN:
 \begin{itemize}
@@ -306,15 +306,28 @@ The following errors were circumvented by combining the masks produced by foregr
 \end{itemize}
 Unfortunately there are some errors that could not be accounted for or circumvented, and must be prevented in any future data collection:
 \begin{itemize}
-	\item Taking front and side photographs from an angle such that the reference object is seen as behind the person instead of alongside them.
-	\item A more pronounced error of parallax in side photographs due to the reference object being a person-width behind the side surface of the person being photographed, resulting in the side dimension extractions being slightly exaggerated.
+	\item Taking front and side photographs from an angle such that the RO is seen as behind the person instead of alongside them.
+	\item A more pronounced error of parallax in side photographs due to the RO being a person-width behind the side surface of the person being photographed, resulting in the side dimension extractions being slightly exaggerated.
 \end{itemize}
 \section{Findings \& Analysis}
 
 \section{Additional Features}
 
 \section{Recommendations}
-
+In accordance with Section \ref{error}, as to improve the quality of the training data as well as model performance, the following minor changes must be implemented when creating a dataset for this system in future:
+\begin{itemize}
+	\item There must be at least half a meter of space to the left of the RO in the photograph, as well as to the right of the person in the photograph.
+	Having other objects vertically below the RO or between the persons head and shoulder in the picture puts the datapoint at risk of being discarded by the program due to its built-in data sanitisation.
+	\item Consider making the RO a bright, distinctly coloured object worn on the person.
+	This would improve the system's ability to locate the RO by first detecting the person, and using the same ROI to find the RO.
+\end{itemize}
+With regards to the speed of execution and resource usage of the program, the following changes should also be implemented in future:
+\begin{itemize}
+	\item The program should be paralellised as far as possible.
+	Processes such as RO detection and person detection are not required to be sequential.
+	\item Instead of using the pre-trained Mask-RCNN model that is trained on 81 classes, train a new model on the same MS COCO dataset but only on two classes: person and background.
+	This would decrease the size of the model, as well increase the speed of person detection.
+\end{itemize} 
 \section{Conclusion}
 
 \section{Acknowledgements}
