@@ -326,7 +326,7 @@ This is also seen in the Front and Side model accuracies, as seen in Appendix 5.
 
 Despite this, it appears that the results show there is a defintive relationship between the maximum width and depth of the common areas body fat deposit and BMI.
 A more comprehensive view of the performance of the final model can be seen in the distribution of percentage error in Figure \ref{fig:errorspread}.
-This distribution can also be seen for the Front and Side model in Appendix 5.
+This distribution can also be seen for the Front and Side model -- Figures 2 and 3 in Appendix 5.
 
 \begin{figure}
 	\centering
@@ -334,6 +334,11 @@ This distribution can also be seen for the Front and Side model in Appendix 5.
 	\caption{Distribution of Percentage Error for BMI Estimations performed on the Full Dataset.}
 	\label{fig:errorspread}
 \end{figure}
+
+One shortcoming of using these accuracies however, is the fact that the Obese category contains data points with a BMI between 30 and appropriately 55.
+The reason for this is the drastically diminishing number of data points in existence with a BMI over 40.
+As expected, these outliers performed poorly in comparison to the categories where the majority of data was located.
+The performance of these outliers can be easily visualised by the data scatters found in Appendix 5.
 
 \section{Additional Features}
 The program allows for height and mass models to be trained, as to provide another means of BMI estimation.
