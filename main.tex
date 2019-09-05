@@ -6,24 +6,29 @@
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage[T1]{fontenc}
-\setlength{\textfloatsep}{6pt}
-\title{\huge{ELEN4002: Digital Estimation of Body Mass Index} \vspace{-6pt}}
-\author{Darrion Singh (1056673) \vspace{-6pt}}
-%titlesec package for title spacing control
+\setlength{\textfloatsep}{3pt}
+\setlength{\parindent}{0pt}
+\usepackage[bottom=2cm, top=2cm, left=1.5cm, right=1.5cm]{geometry}
 \begin{document}
 \bstctlcite{IEEEexample:BSTcontrol}
-\vspace{-6pt}
-\maketitle
+\twocolumn[
+\centering
+\huge{ELEN4002: Digital Estimation of Body Mass Index}
+\vspace{6pt}
+\linebreak
+\large{Darrion Singh (1056673)}
+\vspace{6pt}
+]
 
 \begin{abstract}
-	
+The following reports the findings of a study used to design and implement an application used to estimate Body Mass Index from a photograph.
 \end{abstract}
 
 \section{Introduction}
 The Body Mass Index (BMI) is a screening tool used to indicate whether one's body mass is healthy for their corresponding height \cite{nhsBMI}.
 Whilst not an accurate diagnostic tool, the BMI provides a healthy body mass range for a particular height as it takes natural body shape variations into account \cite{nhsBMI}.
 Unfortunately, the accurate collection of ones height and mass is time-consuming, especially when considering the time required to collect this data for large amounts of people.
-Furthermore, the distance between rural areas and clinics also inhibit the habitants of the area from regular medical checkups, where a medical practitioner might require to measure and track ones height and mass.
+Furthermore, the distance between rural areas and clinics also inhibit the inhabitants of the area from regular medical checkups, where a medical practitioner might require to measure and track ones height and mass.
 A possible solution to both the above mentioned problems would be the creation of a tool that would provide a medical practitioner with this information without the need for the patient to be physically present.
 The following report presents a study of a potential technique to estimate BMI from a photograph. It also reports on the design and implementation of program that estimates BMI from a photograph using these techniques, which include a mixture of Computer Vision and Machine Learning.
 The School of Electrical and Information Engineering (EIE) have collaborated with the Peri-Natal HIV Research Unit (PHRU) for this project.
@@ -34,7 +39,7 @@ This is to be achieved by creating a program which accepts a front and side phot
 The program will extract body shape data from the photographs with the use of Computer Vision, and predict one's BMI based on their body shape data using Machine Learning.
 
 The purpose of such a tool has vast applications in the medical field, whether it be used as a time-efficient means of tracking the progress of a disease/disorder that affects ones mass, or for a simple indication of ones own health.
-Furthermore, a possible extension of this tool would be using it to classify which catergory of BMI one falls into: Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
+Furthermore, a possible extension of this tool would be using it to classify which category of BMI one falls into: Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
 
 The success of this project would result in the production of a BMI estimator which precludes the need for a subject to remove their clothes, as well as travel to a clinic for BMI measurement.
 In large rural clinics, where large patient volumes combined with time taken to undress and redress for accurate height and mass measurements, this digital solution may result in a significant reduction in the time taken for consultations.
@@ -73,7 +78,7 @@ Furthermore, this solution would not be affected by measurement errors resulting
 \section{Literature Review}
 \subsection{Weight and Diameter Estimation of Apples}
 Comert et al. aims to estimate the mass of an apple through image processing and machine learning techniques \cite{comert}.
-The process involves performing edge detection on the original image using the Prewitt edge extraction algorithm, which craetes a binary image containing the edges in the original image.
+The process involves performing edge detection on the original image using the Prewitt edge extraction algorithm, which creates a binary image containing the edges in the original image.
 The binary image then undergoes Closing, filtering and Opening.
 
 Closing is the process of performing Dilation followed by Erosion on an image, whilst Opening is the process of performing Erosion followed by Dilation on an image \cite{opening,closing}.
@@ -81,19 +86,12 @@ Dilation is a morphological operation whereby the value (intensity) of a pixel i
 Erosion is a morphological operation whereby the value of a pixel is decreased to that of the pixel in its neighbourhood with the lowest intensity \cite{mathworksdilationerosion}.
 
 This is done in order to improve the image quality for feature extraction, since Closing an image improves the prevalence of contours, whilst Opening an image improves the uniformity of the spaces between contours.
-The above operations successfully segmented the image such that the pixels of the apple is white whilst the background is black, seen in the right image of Figure \ref{fig:diameterapples}.
+The above operations successfully segmented the image such that the pixels of the apple is white whilst the background is black.
 
-Feature extraction is carried out such that the area and diameter of the apple are extracted seen in Figure \ref{fig:diameterapples}.
+Feature extraction is carried out such that the area and diameter of the apple are extracted.
 This feature extraction would then be performed on a set of apple photographs whose masses were known.
 Thereafter, the diameter and area of the apples were related to their recorded masses using a linear regression model.
 This method reported a 96.5\% accuracy of estimation \cite{comert}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\linewidth]{diameterapples.jpg}
-    \caption{Apple Area and Diameter Extraction  \cite{comert}.}
-    \label{fig:diameterapples}
-\end{figure}
 
 \subsection{Weight Estimation Using Image Analysis and Statistical Modelling}
 Similar to the requirements of the BMI system, Kollis et al. discusses a robust image analysis based mass estimation of pigs in large scale livestock farming \cite{kollis2007weight}. 
@@ -103,14 +101,6 @@ This results in a binary image that undergoes segmentation, filtering and openin
 
 Feature extraction in this paper is particularly relevant to this report as the body shape of the pigs is more complex than the features of apples described by Ref. \cite{comert} in the previous section. 
 The feature extraction method is comprised of the skeletonisation function in MATLAB which generates a skeletal structure of the object in question.
-
-Figure \ref{fig:pigskeleton} shows the skeletonisation process for the image of the pig.
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{pigskeleton.jpg}
-    \caption{Skeletonisation function implemented on pig binary image\cite{kollis2007weight}.}
-    \label{fig:pigskeleton}
-\end{figure}
 
 Using this process the spine (main branch) is used to estimate the length of the pig by counting the pixels which comprise the spine.
 Thereafter, the estimated spine length and recorded pig masses were related using a linear regression model.
@@ -127,7 +117,7 @@ Convolutional neural networks are used in applications such as object detection 
 Pantanowitz et al. have conducted a similar undertaking to that described in this report.
 The paper discusses the estimation of BMI from a photograph using a Deep Convolutional Neural Network \cite{bmifromphoto}.
 The analysis was performed on a dataset of 161 photographs that were used to create a set of silhouette images via manual marking as well as automated image processing techniques.
-The silhouette images were standardised to a particular pixel width without changing aspect ratio, and were theereafter padded appropriately and cropped to a square bounding box.
+The silhouette images were standardised to a particular pixel width without changing aspect ratio, and were thereafter padded appropriately and cropped to a square bounding box.
 The silhouette images were augmented via minimal rotations and width shifts, with the author stating that the model could only train sufficiently with augmentation.
 A rather complicated model consisting of 17 layers was used, details of which can be found in Ref. \cite{bmifromphoto}.
 The results showed the BMI predictions having a correlation of 0.96 with the actual BMI values.
@@ -135,7 +125,7 @@ The results showed the BMI predictions having a correlation of 0.96 with the act
 \section{System Design}
 The proposed solution comprises of two subsystems, namely the Extraction layer and the Machine Learning layer.
 These subsystems have no dependency on each other and are to be built independently of one another.
-Figure \ref{fig:systemblockdiagram} in Appendix 5 provides a system diagram showing the inputs and outputs of each system, as well as the components of each system.
+Figure 1 in Appendix 5 provides a system diagram showing the inputs and outputs of each system, as well as the components of each system.
 The Extraction layer comprises of the Object Detection, Image Segmentation and Input Extraction components, whilst the Machine Learning layer comprises of the Front View, Side View and Weighted Averaging components.
 \subsection{Extraction Layer}
 A front and side view photograph of a person with the aforementioned RO in the top left corner is the input into the system.
@@ -197,7 +187,7 @@ Both photographs had the RO in the top left corner of the image.
 These were captured simultaneously and linked to the persons subject number using the \textit{REDCap} application.
 \item (Optional) Sex of person in each photograph.
 Whilst this characteristic is not an input into the system, it was recorded for statistical purposes.
-Furthermore, to achieve the optional criteria discussed in preceeding sections, data points must be labelled as male/female to train separate models.
+Furthermore, to achieve the optional criteria discussed in preceding sections, data points must be labelled as male/female to train separate models.
 \item (Optional) Age of person in each photograph.
 This characteristic, despite only being recorded for statistical purposes, is by far the largest contributor to the distribution of BMI, as seen in Ref. \cite{bmiage}.
 Knowing the distribution of the age of the subjects may provide a range of ages where the program is likely to provide the most accurate estimation.
@@ -220,12 +210,12 @@ Method One is as follows:
 	\item The filtering produced a binary image which showed the positions of black pixels in the image.
 	Edge detection (using the OpenCV implementation of the Canny algorithm) was performed on the filtered image, returning all contours in the image.
 	\item OpenCV's Polygon approximation was then performed on the contours that were returned.
-	This returned all contours in the photograph that have four verticies (rectangular).
+	This returned all contours in the photograph that have four vertices (rectangular).
 	The contours were ordered from left to right, and the left most contour was assumed to belong to the RO, and returned it.
 \end{itemize}
 This method is precise since it searches for a specific type of contour from a specific subset of the pixels in the image, and was partially inspired by Ref. \cite{blackShapeDetection}.
 Unfortunately, whilst this method works for most images there are instances where the lighting in the room caused the pixels which comprise the RO to be so brightened that it fell outside the range of gray specified above.
-In this case, no rectangular contours would be returned, triggering Method Two as a failsafe. 
+In this case, no rectangular contours would be returned, triggering Method Two as a fail-safe. 
 Method Two is as follows:
 \begin{itemize}
 	\item The image is first converted to grayscale and slightly blurred to reduce noise.
@@ -241,22 +231,22 @@ Using the known dimensions of the RO, the pixels per meter metric is found and r
 
 \subsubsection{Person Detection and Segmentation}
 The purpose of Person Detection is to return the pixel mask of the person in the image and extract that the aforementioned FVV and SVV.
-Using the key assumption stated earlier that the person in the photograph is standing in front of a uniform background, the following method was developed (partially inspired by Ref. \cite{maskrcnnDetection}):
+Using the key assumption stated earlier that the person in the photograph is standing in front of a uniform background, the following method was developed, partially inspired by Ref. \cite{maskrcnnDetection}:
 \begin{itemize}
 	\item The Mask-RCNN model developed in Ref \cite{maskrcnn} was used to detect the Region of Interest (ROI) that contained the person -- their bounding box.
-	This pretrained model has been trained on the MS COCO dataset to detect people, among other common objects, and return an approximate (rough) pixel mask of the person \cite{mscoco}.
+	This pre-trained model has been trained on the MS COCO dataset to detect people, among other common objects, and return an approximate (rough) pixel mask of the person \cite{mscoco}.
 	\item The bounding box returned from the Mask-RCNN was then used to perform foreground extraction on the corresponding ROI in the original image (using the OpenCV implementation of the GrabCut algorithm), returning the pixel mask of the extracted foreground.
 	\item The foreground-produced mask more accurately defines the silhouette but is susceptible to noise due to nearby objects, whilst the CNN-produced mask provides an approximate shape of the person but is almost unaffected by nearby objects.
-	\item These two pixel masks are combined using the bitwise-AND operation, such that the final pixel mask only contains pixels found in both the foreground-produced and CNN-produced masks.
+	\item These two pixel masks are combined using the bit-wise AND operation, such that the final pixel mask only contains pixels found in both the foreground-produced and CNN-produced masks.
 \end{itemize}
-The returned pixel mask was rid of zero rows as to crop the top and botton of the mask.
-The number of rows in the remaining image was taken as the pixel height of the person, and converted using the pixels per meter meteric to a physical height.
-The pixels per meter meteric was used to calculate physical area per pixel.
+The returned pixel mask was rid of zero rows as to crop the top and bottom of the mask.
+The number of rows in the remaining image was taken as the pixel height of the person, and converted using the pixels per meter metric to a physical height.
+The pixels per meter metric was used to calculate physical area per pixel.
 The pixels in the mask were summed and then converted to physical area using this metric.
 
 The image was then approximated into eight sections, to represent the eight distinct regions of the body: Head, Neck, Thorax, Abdomen, Pelvis, Upper Leg, Lower Leg, Foot \cite{bodyproportions}.
 The row with the largest number of pixels (maximum thickness) of the Thorax, Abdomen, Pelvis and Upper Leg regions were then extracted and converted to physical dimensions.
-Altogther, these features made the FVV and SVV.
+Altogether, these features made the FVV and SVV.
 This method of data extraction and composition of FVV and SVV were inspired by Ref. \cite{comert}.
 A visual representation of the entire Extraction Layer can be seen in Figure \ref{fig:segbeforeafter}.
 
@@ -284,14 +274,14 @@ At the end of each complete training cycle, the models were evaluated by exposin
 The model which had the lowest combination of MAE and maximum deviation when exposed to completely unseen data was saved as having the best performance.
 The final Model Loss and Training Method for the best performing models were as follows:
 \begin{itemize}
-	\item Front:
-	\item Side:
-	\item Compensation:
+	\item Front: Trained using Stratified Cross Validation using 10 folds, Mean Absolute Error (MAE) — 3.32
+	\item Side: Trained using Cross Validation using 10 folds, MAE — 2.77
+	\item Compensation: Trained using the Classical Test/Train Split, MAE — 2.58
 \end{itemize}
 Note that the Front and Side View models were first trained, and the best performing models were used to generate data to train the Compensation model.
 
 The final architecture of the Front model was 4-3-2-1, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
-The final architecture of the Side and Compensation models were 4-3-2-1 and 4-3-2-1 respectively.
+The final architecture of the Side and Compensation models were ****** and ******* respectively.
 \section{Sources of Error} \label{error}
 As expected when performing feature extraction on a photographic dataset, the system design either had to account for or circumvent various errors in the dataset.
 The following errors were circumvented by creating a Method One as described in Section \ref{refobdetseg}:
@@ -325,13 +315,13 @@ This can be extended in future versions of the program to interactively choose a
 In accordance with Section \ref{error}, as to improve the quality of the training data as well as model performance, the following minor changes must be implemented when creating a dataset for this system in future:
 \begin{itemize}
 	\item There must be at least half a meter of space to the left of the RO in the photograph, as well as to the right of the person in the photograph.
-	Having other objects vertically below the RO or between the persons head and shoulder in the picture puts the datapoint at risk of being discarded by the program due to its built-in data sanitisation.
+	Having other objects vertically below the RO or between the persons head and shoulder in the picture puts the data point at risk of being discarded by the program due to its built-in data sanitisation.
 	\item Consider making the RO a bright, distinctly coloured object worn on the person.
 	This would improve the system's ability to locate the RO by first detecting the person, and using the same ROI to find the RO.
 \end{itemize}
 With regards to the speed of execution and resource usage of the program, the following changes should also be implemented in future:
 \begin{itemize}
-	\item The program should be paralellised as far as possible.
+	\item The program should be parallelised as far as possible.
 	Processes such as RO detection and person detection are not required to be sequential.
 	\item Instead of using the pre-trained Mask-RCNN model that is trained on 81 classes, train a new model on the same MS COCO dataset but only on two classes: person and background.
 	This would decrease the size of the model, as well increase the speed of person detection.
@@ -339,7 +329,14 @@ With regards to the speed of execution and resource usage of the program, the fo
 \section{Conclusion}
 
 \section{Acknowledgements}
-The author would like to extend his thanks to Sachin Govender (1036148) for his contribution, particularly to the Machine Learning layer of the system.
+The author would like to extend his gratitude to the following people:
+\begin{itemize}
+    \item Sachin Govender (1036148) for his contribution, particularly to the Machine Learning layer of the system.
+    \item Prof. Scott Hazelhurst from the University of the Witwatersrand, who supervised this study.
+    \item Dr. Neil Martinson from the Peri-Natal HIV Research Unit.
+    The PHRU have been invaluable to this study due to their contribution to data collection.
+\end{itemize}
+
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
