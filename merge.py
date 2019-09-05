@@ -1,6 +1,6 @@
 from PyPDF2 import PdfFileMerger
 
-pdfs = ['main.pdf', 'appendix1.pdf', 'appendix3.pdf']
+pdfs = ['main.pdf', 'appendix1.pdf', 'appendix3.pdf', 'appendix5.pdf']
 
 merger = PdfFileMerger()
 

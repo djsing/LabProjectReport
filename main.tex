@@ -8,7 +8,7 @@
 \usepackage[T1]{fontenc}
 \setlength{\textfloatsep}{3pt}
 \setlength{\parindent}{0pt}
-\usepackage[bottom=2cm, top=2cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage[bottom=1.5cm, top=1.5cm, left=1.5cm, right=1.5cm]{geometry}
 \begin{document}
 \bstctlcite{IEEEexample:BSTcontrol}
 \twocolumn[
@@ -33,7 +33,7 @@ A possible solution to both the above mentioned problems would be the creation o
 The following report presents a study of a potential technique to estimate BMI from a photograph. It also reports on the design and implementation of program that estimates BMI from a photograph using these techniques, which include a mixture of Computer Vision and Machine Learning.
 The School of Electrical and Information Engineering (EIE) have collaborated with the Peri-Natal HIV Research Unit (PHRU) for this project.
 \section{Background}
-\subsection{Project Concept}
+\subsection{Project Concept} \label{concept}
 The aim of this project is to estimate the BMI of a person from their photograph.
 This is to be achieved by creating a program which accepts a front and side photograph of a person.
 The program will extract body shape data from the photographs with the use of Computer Vision, and predict one's BMI based on their body shape data using Machine Learning.
@@ -200,7 +200,7 @@ Drawing from the previously discussed literature, the following sections describ
 The chosen technologies used for this system is Python, due to its open-source nature, large online community support, and its growing popularity in the Machine Learning field.
 \subsection{Extraction Layer}
 \subsubsection{Reference Object Detection and Segmentation} \label{refobdetseg}
-The purpose of Reference Object Detection is to extract the pixels per meter metric from the photograph, since this metric is used for all subsequent data extraction in the succeeding components such as the person's height, silhouette area, widths and depths.
+The first task for these components is to extract the pixels per meter metric from the photograph, since this metric is used for all subsequent data extraction in the succeeding components such as the person's height, silhouette area, widths and depths.
 Two methods have been used to extract the RO from the photograph, both of which make extensive use of the OpenCV-Python library.
 Method One is the primary operation, while Method Two is activated if Method One fails during runtime.
 Method One is as follows:
@@ -230,7 +230,7 @@ Furthermore, it is also susceptible to non-rectangular objects appearing to the 
 Using the known dimensions of the RO, the pixels per meter metric is found and returned.
 
 \subsubsection{Person Detection and Segmentation}
-The purpose of Person Detection is to return the pixel mask of the person in the image and extract that the aforementioned FVV and SVV.
+The final task for these components is to return the pixel mask of the person in the image and extract that the aforementioned FVV and SVV.
 Using the key assumption stated earlier that the person in the photograph is standing in front of a uniform background, the following method was developed, partially inspired by Ref. \cite{maskrcnnDetection}:
 \begin{itemize}
 	\item The Mask-RCNN model developed in Ref \cite{maskrcnn} was used to detect the Region of Interest (ROI) that contained the person -- their bounding box.
@@ -264,7 +264,7 @@ The Front, Side and Compensation models were all MLP's.
 The models were evaluated by a weighted scoring system that took the maximum deviation from the mean as well as the Mean Absolute Error (MAE) into account.
 MAE (measured in BMI) was considered as the main metric of model loss, since in this particular application, the accuracy of individual results was more important than evaluating the spread of BMI estimations \cite{bmifromface}.
 
-\subsubsection{Training and Final Performance}
+\subsubsection{Training and Final Performance} \label{trainingandperformance}
 Before training, 20\% of the original dataset was removed to be used later as unseen data during model evaluation.
 The remaining data was used with both the Classical Test-Train split and (Stratified) k-Fold cross validation methods to train the models.
 The Classical method used a 70/30 train/test split for training, whilst the Cross Validation methods used 10 folds.
@@ -282,6 +282,7 @@ Note that the Front and Side View models were first trained, and the best perfor
 
 The final architecture of the Front model was 4-3-2-1, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
 The final architecture of the Side and Compensation models were ****** and ******* respectively.
+
 \section{Sources of Error} \label{error}
 As expected when performing feature extraction on a photographic dataset, the system design either had to account for or circumvent various errors in the dataset.
 The following errors were circumvented by creating a Method One as described in Section \ref{refobdetseg}:
@@ -300,7 +301,39 @@ Unfortunately there are some errors that could not be accounted for or circumven
 	\item Taking front and side photographs from an angle such that the RO is seen as behind the person instead of alongside them.
 	\item A more pronounced error of parallax in side photographs due to the RO being a person-width behind the side surface of the person being photographed, resulting in the side dimension extractions being slightly exaggerated.
 \end{itemize}
+
 \section{Findings \& Analysis}
+The models that were described has having the best performance to unseen data in Section \ref{trainingandperformance} was used to make BMI predictions for the entire dataset of 427 people.
+Figures \ref{fig:spread, fig:accuracies} show the BMI category composition of the dataset and average accuracy of the final BMI prediction (i.e. from the Compensator model) for each category.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{spread.png}
+	\caption{Number of people in dataset according to BMI categories described in Section \ref{concept}).}
+	\label{fig:spread}
+\end{figure}
+
+The first thing to be noted from Figure \ref{fig:spread} is the sheer under-representation of the Underweight population in the dataset.
+It thus comes as no surprise that the lowest BMI estimation accuracy comes from this group.
+This is also seen in the Front and Side model accuracies, as seen in Appendix 5.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{accuracies.png}
+	\caption{Average accuracy of Final BMI Model predictions for total dataset according to BMI categories described in Section \ref{concept}).}
+	\label{fig:accuracies}
+\end{figure}
+
+Despite this, it appears that the results show there is a defintive relationship between the maximum width and depth of the common areas body fat deposit and BMI.
+A more comprehensive view of the performance of the final model can be seen in the distribution of percentage error in Figure \ref{fig:errorspread}.
+This distribution can also be seen for the Front and Side model in Appendix 5.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{errorspread.png}
+	\caption{Distribution of Percentage Error for BMI Estimations performed on the Full Dataset.}
+	\label{fig:accuracies}
+\end{figure}
 
 \section{Additional Features}
 The program allows for height and mass models to be trained, as to provide another means of BMI estimation.
@@ -311,6 +344,7 @@ The training also produces an output file listing the parameters used for the cy
 
 Finally, the program also provides the user with the option to visualise the data being extracted from the image for the purpose of error detection.
 This can be extended in future versions of the program to interactively choose a reference object in the photograph.
+
 \section{Recommendations}
 In accordance with Section \ref{error}, as to improve the quality of the training data as well as model performance, the following minor changes must be implemented when creating a dataset for this system in future:
 \begin{itemize}
@@ -325,7 +359,8 @@ With regards to the speed of execution and resource usage of the program, the fo
 	Processes such as RO detection and person detection are not required to be sequential.
 	\item Instead of using the pre-trained Mask-RCNN model that is trained on 81 classes, train a new model on the same MS COCO dataset but only on two classes: person and background.
 	This would decrease the size of the model, as well increase the speed of person detection.
-\end{itemize} 
+\end{itemize}
+
 \section{Conclusion}
 
 \section{Acknowledgements}

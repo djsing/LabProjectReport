@@ -5,6 +5,8 @@
 \usepackage{cite}
 \usepackage{amsmath}
 \usepackage{gensymb}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \begin{document}
 \onecolumn
@@ -19,6 +21,21 @@ All images in this Appendix have been referenced in the main report.
     \includegraphics[width=\linewidth]{systemblock.png}
     \caption{System Block Diagram showing the processes input images undergo to estimate BMI.}
     \label{fig:systemblockdiagram}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Front.png}
+    \caption{Prediction Accuracy Across BMI Categories for Front Model.}
+    \label{fig:frontaccuracy}
+    \end{minipage}
+    \hspace{1cm}
+    \begin{minipage}[b]{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Side.png}
+    \caption{Prediction Accuracy Across BMI Categories for Side Model.}
+    \label{fig:sideaccuracy}
+    \end{minipage}
 \end{figure}
 \end{document}
 
