@@ -257,6 +257,7 @@ The pixels in the mask were summed and then converted to physical area using thi
 The image was then approximated into eight sections, to represent the eight distinct regions of the body: Head, Neck, Thorax, Abdomen, Pelvis, Upper Leg, Lower Leg, Foot \cite{bodyproportions}.
 The row with the largest number of pixels (maximum thickness) of the Thorax, Abdomen, Pelvis and Upper Leg regions were then extracted and converted to physical dimensions.
 Altogther, these features made the FVV and SVV.
+This method of data extraction and composition of FVV and SVV were inspired by Ref. \cite{comert}.
 A visual representation of the entire Extraction Layer can be seen in Figure \ref{fig:segbeforeafter}.
 
 \begin{figure}
@@ -312,7 +313,14 @@ Unfortunately there are some errors that could not be accounted for or circumven
 \section{Findings \& Analysis}
 
 \section{Additional Features}
+The program allows for height and mass models to be trained, as to provide another means of BMI estimation.
+The training and evaluation is the same as described above, producing the highest performing model.
 
+All models are automatically indexed by date, time, model type (BMI/Height/Mass), Network architecture.
+The training also produces an output file listing the parameters used for the cycle, as well as model performance per training type (Classical/Cross Validation).
+
+Finally, the program also provides the user with the option to visualise the data being extracted from the image for the purpose of error detection.
+This can be extended in future versions of the program to interactively choose a reference object in the photograph.
 \section{Recommendations}
 In accordance with Section \ref{error}, as to improve the quality of the training data as well as model performance, the following minor changes must be implemented when creating a dataset for this system in future:
 \begin{itemize}
@@ -331,7 +339,7 @@ With regards to the speed of execution and resource usage of the program, the fo
 \section{Conclusion}
 
 \section{Acknowledgements}
-
+The author would like to extend his thanks to Sachin Govender (1036148) for his contribution, particularly to the Machine Learning layer of the system.
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
