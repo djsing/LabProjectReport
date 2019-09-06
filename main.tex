@@ -24,13 +24,13 @@
 \justify
 \small{\textbf{Abstract:} The following reports the design and implementation of an application used to estimate Body Mass Index from a photograph.
 The total duration of the project was six weeks.
-The application consistd of a feature extraction layer and a machine learning layer.
+The application consisted of a feature extraction layer and a machine learning layer.
 The dataset collected to train the machine learning layer consisted of 465 anonymised people's photographs.
 The program detected a reference object of known dimensions located in each photograph, and subsequently estimated the dimensions of the person in the photograph.
 Dimensions were chosen at the location of common body fat deposits, and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptron (MLP) models that estimated BMI -- one for the front photograph, another for the side photograph, and finally, one that compensated for errors between the front and side estimations, and was the final output of the program.
 The results of the final model BMI estimation showed a mean estimation accuracy ranging between 79\% and 92\% for the various categories of BMI, namely Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
-Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\% with a mean absolute error of ***, and standard deviation of ***.}
-\vspace{3pt}
+Furthermore, the spread of error showed that about 61\% of participants had an error less than 10\%, and about 89\% of participants had an error less than 25\% with a mean absolute error of ***, and standard deviation of ***.}
+\vspace{6pt}
 ]
 
 \section{Introduction}
@@ -42,15 +42,14 @@ The following report presents the design and implementation of program that esti
 The School of Electrical and Information Engineering (EIE) have collaborated with the Peri-Natal HIV Research Unit (PHRU) for this project.
 
 \section{Background}
+The Assumptions, Constraints, and Success Criteria have been re-evaluated and refined from that which was described in the Project Plan in Appendix 3.
+Note that the Optional Criteria for this project (Section IID of Appendix 3) remain unchanged.
 \subsection{Project Concept} \label{concept}
 The aim of this project is to estimate the BMI of a person by creating a program which accepts a front and side photograph of that person.
 The program will extract body shape data from the photographs with the use of Computer Vision, and estimate their BMI based on their body shape data using Machine Learning.
 
 The purpose of such a tool has vast applications in the medical field, whether it be used as a time-efficient means of tracking the progress of a disease/disorder that affects ones mass, or for a simple indication of ones own health.
 Furthermore, a possible extension of this tool would be using it to classify which category of BMI one falls into: Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
-
-The success of this project would result in the production of a BMI estimator which precludes the need for a subject to remove their clothes, as well as travel to a clinic for BMI measurement.
-Furthermore, this solution would not be affected by measurement errors resulting from incorrect calibration of machinery.
 
 \subsection{Assumptions \& Constraints}
 \begin{itemize}
@@ -74,17 +73,8 @@ Furthermore, this solution would not be affected by measurement errors resulting
 	\item The solution should be camera resolution-independent.
 \end{itemize}
 
-\subsection{Optional Criteria}
-\begin{itemize}
-	\item The software and it's trained neural network models are exported to either a mobile application or desktop executable. In this way, one could select a photograph from their cellphone/desktop gallery and the program could perform estimation on the chosen picture.
-	\item The desktop executable can receive pictures from a connected camera.
-	\item A mobile application would access the cellphone's camera and perform a BMI estimation from a photograph taken in-app. The estimation could either be shown to the user or sent to the medical practitioner directly.
-	\item Provided that there is sufficient training data, training two separate models for male and female data points would decrease sex bias in the models. This would be to further improve accuracy by accounting for natural variations of body shape between men and women, with the hope of seeing similar statistical variations in BMI across age and sex as seen in Ref. \cite{bmiage}.
-\end{itemize}
-
 \section{Literature Review}
-Before designing the final solution, various literature was consulted.
-The following literature were those most relevant to the estimation of BMI or relevant to the design choices made, as described in the succeeding sections of this report.
+The following literature were those most relevant to the estimation of BMI or relevant to the design choices made.
 Further literature was consulted, the findings of which can be seen in the "Literature Review" section of Appendix 3.
 \subsection{Weight and Diameter Estimation of Apples}
 Comert et al. aims to estimate the mass of an apple through image processing and machine learning techniques \cite{comert}.
@@ -195,12 +185,12 @@ The final dataset that was used contained 465 photographs, taken with multiple c
 
 \section{Methodology}
 Drawing from the previously discussed literature, the following sections describe methodology employed to achieve each component and subsystem implementation described above.
-The chosen technologies used for this system is Python, due to its open-source nature, large online community support, and its growing popularity in the Machine Learning field.
+The chosen technology for this system is Python, due to its open-source nature, large online community support, and its growing popularity in the Machine Learning field.
 \subsection{Extraction Layer}
 \subsubsection{Reference Object Detection and Segmentation} \label{refobdetseg}
 The first task for these components is to extract the pixels per meter metric from the photograph, since this metric is used for all subsequent data extraction in the succeeding components such as the person's height, silhouette area, widths and depths.
 Two methods have been used to extract the RO from the photograph, both of which make extensive use of the OpenCV-Python library.
-Method One is the primary operation, while Method Two is activated if Method One fails during runtime.
+Method One is the primary operation, while Method Two is activated if Method One fails during run-time.
 Method One is as follows:
 \begin{itemize}
 	\item Knowing that the RO is black, the image was filtered of all pixels whose 8-bit colour fell outside of the gray range of 0 -- 130, where 0 is pure black and 255 is white, such that the remaining pixels were considered as the 'black' pixels of the image.
@@ -272,9 +262,9 @@ At the end of each complete training cycle, the models were evaluated by exposin
 The model which had the lowest combination of MAE and maximum deviation when exposed to completely unseen data was saved as having the best performance.
 The final Model Loss and Training Method for the best performing models were as follows:
 \begin{itemize}
-	\item Front: Trained using Stratified Cross Validation using 10 folds, Mean Absolute Error (MAE) — 3.32
-	\item Side: Trained using Cross Validation using 10 folds, MAE — 2.77
-	\item Compensation: Trained using the Classical Test/Train Split, MAE — 2.58
+\item Front: Trained using Stratified Cross Validation using 10 folds, Mean Absolute Error (MAE) — 3.32
+\item Side: Trained using Cross Validation using 10 folds, MAE -- 2.77
+\item Compensation: Trained using the Classical Test/Train Split, MAE -- 2.58
 \end{itemize}
 Note that the Front and Side View models were first trained, and the best performing models were used to generate data to train the Compensation model.
 
@@ -321,11 +311,15 @@ Figures \ref{fig:spread} and \ref{fig:accuracies} show the BMI category composit
 
 The first thing to be noted from Figure \ref{fig:spread} is the sheer under-representation of the Underweight population in the dataset.
 It thus comes as no surprise that the lowest BMI estimation accuracy comes from this group.
-This is also seen in the Front and Side model accuracies, as seen in Appendix 5.
+This is also seen in the low Front and Side model accuracies, as seen in Figures 6 - 17 in Appendix 5.
+As seen, the performance of the Side model to Underweight participants had only 29\% of its category with an estimation error of less than 10\%.
 
-Despite this, it appears that the results show there is a definitive relationship between the maximum width and depth of the common areas body fat deposit and BMI.
+Despite this, it appears that the results from the final compensation model show there is a definitive relationship between the maximum width and depth of the common areas body fat deposit and BMI, in reference to the well represented areas of the dataset, namely those of Healthy Weight and those Overweight.
+This is seen in the mean estimation accuracy ranging between 79\% and 92\% throughout the BMI categories.
 A more comprehensive view of the performance of the final model can be seen in the tally of percentage error in Figure \ref{fig:errorspread}, and the distribution of error in Figure \ref{fig:errordist}.
-This distribution can also be seen for the Front and Side model -- Figures 2-5 in Appendix 5.
+
+These figures show that approximately 61\% of all participants had an estimation error of 10\% or less -- the vast majority of which having measurement errors between 0 and 6\%.
+With regards to the success criteria of a minimum mean accuracy of 75\%, these figures show that about 89\% of all participants had estimation error of 25\% or less i.e. an estimation \textit{accuracy} of 75\% or more.
 \begin{figure}
 \centering
 \begin{minipage}[b]{0.235\textwidth}
@@ -340,24 +334,21 @@ This distribution can also be seen for the Front and Side model -- Figures 2-5 i
 	\label{fig:errordist}
 	\end{minipage}
 \end{figure}
-One shortcoming of using these accuracies however, is the fact that the Obese category contains data points with a BMI between 30 and appropriately 55.
-The reason for this is the drastically diminishing number of data points in existence with a BMI over 40.
-As expected, these outliers performed poorly in comparison to the categories where the majority of data was located.
-The performance of these outliers can be easily visualised by the data scatters found in Appendix 5.
 
-Figure 19 in Appendix 5 shows a slight flattening of the Front model estimation scatter, i.e. a constant prediction across a range of inputs.
-This is most likely due to a phenomenon known as ReLu Neuron Death, which occurs when a ReLu-activated neuron receives an overall negative input, causing it to produce zero \cite{reludeath}.
-For a constant output to occur, it then follows that multiple neurons from the same layer have died, leaving the constant bias term to make the majority (if not all) contribution to the output.
-It is worth noting that models trained on a dataset of this small size are particularly susceptible to ReLu death, and must be avoided by increasing dataset sizes in future.
+One misrepresentation caused by these accuracies however, is that there are approximately five people with a BMI of over 45.
+As expected, these outliers performed poorly in comparison to the categories where the majority of data was located, and has thus exaggerated the average error of the Obese category.
+A better representation would be to evaluate the accuracies between a BMI of 30 and 40, as they are better represented in the dataset, and extend the remaining points to differing levels of obesity.
+
+Figure 19 in Appendix 5 shows a slight 'flattening' or constant prediction across a small range of inputs.
+This is most likely due to 'ReLu Neuron Death', which occurs when a ReLu-activated neuron receives an overall negative input, causing it to produce zero \cite{reludeath}.
+It then follows that the constant output is produced since the constant bias term makes the majority (if not all) of the contribution to the output.
+Alternatives that mitigate this are the Leaky/Parametric ReLu functions \cite{reludeath}.
 
 \section{Additional Features}
 The program allows for height and mass models to be trained, as to provide another means of BMI estimation.
 The training and evaluation is the same as described above, producing the highest performing model.
 
-All models are automatically indexed by date, time, model type (BMI/Height/Mass), Network architecture.
-The training also produces an output file listing the parameters used for the cycle, as well as model performance per training type (Classical/Cross Validation).
-
-Finally, the program also provides the user with the option to visualise the data being extracted from the image for the purpose of error detection.
+The program also provides the user with the option to visualise the data being extracted from the image for the purpose of error detection.
 This can be extended in future versions of the program to interactively choose a reference object in the photograph.
 
 \section{Recommendations}
@@ -383,7 +374,7 @@ The technique involved relating BMI to features such as the estimated dimensions
 The above features were extracted using Computer Vision to perform Object Detection, Image Segmentation, Foreground Extraction and Size Estimation on front and side photographs of fully clothed people.
 The features were then used to train three MLP models to perform BMI estimation.
 The BMI estimation results of the final model showed a mean estimation accuracy ranging between 79\% and 92\% for the BMI categories, fulfilling the minimum success criteria of 75\% mean accuracy.
-Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\%.
+Furthermore, the spread of error showed that 61\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\%.
 Finally, this software has been presented with a GUI for medical practitioners to easily use.
 It was noted that an increase in the size of the dataset as well as a revised placement and choice of reference object would result in more accurate feature extraction.
 Hopefully in future, the additional features of height and mass estimation can be used alongside the BMI model to even more accurately determine these important metrics of health.
@@ -392,16 +383,12 @@ Hopefully in future, the additional features of height and mass estimation can b
 The author would like to extend his gratitude to the following people:
 \begin{itemize}
     \item Sachin Govender (1036148) for his contribution, particularly to the Machine Learning layer of the system.
-    His findings can be seen in Ref \cite{sachin}.
-    \item Prof. Scott Hazelhurst from the University of the Witwatersrand, who supervised this study.
+    His findings can be found in Ref \cite{sachin}.
+    \item Prof. Scott Hazelhurst from the University of the Witwatersrand, who supervised this project.
     \item Dr. Neil Martinson from the Peri-Natal HIV Research Unit, who co-supervised this project.
-    Dr. Martinson provided clinical research staff to assist us with this study.
-    The PHRU have been invaluable to this study due to their contribution to data collection.
+    Dr. Martinson provided PHRU clinical research staff who were invaluable to this study due to their contribution to data collection.
 \end{itemize}
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
-
-% interactive black threshold chooser
-% REFERENCE OUR REPO
