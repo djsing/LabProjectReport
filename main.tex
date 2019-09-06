@@ -6,6 +6,8 @@
 \usepackage{amsmath}
 \usepackage{gensymb}
 \usepackage[T1]{fontenc}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
 \setlength{\textfloatsep}{3pt}
 \setlength{\floatsep}{3pt}
 \setlength{\parindent}{0pt}
@@ -246,7 +248,6 @@ The row with the largest number of pixels (maximum thickness) of the Thorax, Abd
 Altogether, these features made the FVV and SVV.
 This method of data extraction and composition of FVV and SVV were inspired by Ref. \cite{comert}.
 A visual representation of the entire Extraction Layer can be seen in Figure \ref{fig:segbeforeafter}.
-
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{segbeforeafter.png}
@@ -279,7 +280,7 @@ The final Model Loss and Training Method for the best performing models were as 
 Note that the Front and Side View models were first trained, and the best performing models were used to generate data to train the Compensation model.
 
 The final architecture of the Front model was ******, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
-The final architecture of the Side and Compensation models were ****** and ******* respectively.
+The final architecture of the Side and Compensation models were ****** and ******* respectively. The full implementation of the system can be found at \href{https://github.com/djsing/ELEN4002LabProject}{https://github.com/djsing/ELEN4002LabProject}.
 
 \section{Sources of Error} \label{error}
 As expected when performing feature extraction on a photographic dataset, the system design either had to account for or circumvent various errors in the dataset.
@@ -324,18 +325,31 @@ It thus comes as no surprise that the lowest BMI estimation accuracy comes from 
 This is also seen in the Front and Side model accuracies, as seen in Appendix 5.
 
 Despite this, it appears that the results show there is a definitive relationship between the maximum width and depth of the common areas body fat deposit and BMI.
-A more comprehensive view of the performance of the final model can be seen in the distribution of percentage error in Figure \ref{fig:errorspread}.
-This distribution can also be seen for the Front and Side model -- Figures 2 and 3 in Appendix 5.
+A more comprehensive view of the performance of the final model can be seen in the tally of percentage error in Figure \ref{fig:errorspread}, and the distribution of error in Figure \ref{errordist}.
+This distribution can also be seen for the Front and Side model -- Figures 2-5 in Appendix 5.
 \begin{figure}
-	\centering
-	\includegraphics[width=0.6\linewidth]{errorspread.png}
-	\caption{Distribution of Percentage Error for Final Model BMI Estimations performed on the Full Dataset.}
+\centering
+\begin{minipage}[b]{0.235\textwidth}
+	\includegraphics[width=\linewidth]{errorspread.png}
+	\caption{Frequency of Percentage Error for Final Model BMI Estimations performed on the Full Dataset.}
 	\label{fig:errorspread}
+	\end{minipage}
+\hspace{0.1cm}
+\begin{minipage}[b]{0.235\textwidth}
+	\includegraphics[width=\linewidth]{errorspread.png}
+	\caption{Distribution of Percentage Error for Final Model BMI Estimations performed on the Full Dataset.}
+	\label{fig:errordist}
+	\end{minipage}
 \end{figure}
 One shortcoming of using these accuracies however, is the fact that the Obese category contains data points with a BMI between 30 and appropriately 55.
 The reason for this is the drastically diminishing number of data points in existence with a BMI over 40.
 As expected, these outliers performed poorly in comparison to the categories where the majority of data was located.
 The performance of these outliers can be easily visualised by the data scatters found in Appendix 5.
+
+Figure 19 in Appendix 5 shows a slight flattening of the Front model estimation scatter, i.e. a constant prediction across a range of inputs.
+This is most likely due to a phenomenon known as ReLu Neuron Death, which occurs when a ReLu-activated neuron receives an overall negative input, causing it to produce zero \cite{reludeath}.
+For a constant output to occur, it then follows that multiple neurons from the same layer have died, leaving the constant bias term to make the majority (if not all) contribution to the output.
+It is worth noting that models trained on a dataset of this small size are particularly susceptible to ReLu death, and must be avoided by increasing dataset sizes in future.
 
 \section{Additional Features}
 The program allows for height and mass models to be trained, as to provide another means of BMI estimation.
@@ -386,6 +400,5 @@ The author would like to extend his gratitude to the following people:
 \bibliography{references}
 \end{document}
 
-% ReLu neuron death
 % interactive black threshold chooser
 % REFERENCE OUR REPO
