@@ -7,6 +7,7 @@
 \usepackage{gensymb}
 \usepackage[T1]{fontenc}
 \setlength{\textfloatsep}{3pt}
+\setlength{\floatsep}{3pt}
 \setlength{\parindent}{0pt}
 \usepackage[bottom=1.5cm, top=1.5cm, left=1.5cm, right=1.5cm]{geometry}
 \begin{document}
@@ -23,10 +24,10 @@
 \begin{abstract}
 The following reports the findings of a study that was used to design and implement an application used to estimate Body Mass Index from a photograph.
 The total duration of the study, design and implementation of the application was six weeks.
-The application had a layer that performed various feature extraction on the images, as well as a layer that performed BMI estimation using machine learning.
-The dataset used to train the machine learning layer consisted of 465 sets of front and side photographs of a person, along with their height, mass, age and sex.
-The program detected a reference object of known dimensions (in this case a black piece of cardboard) located in each photograph, and subsequently estimated the dimensions of the person in the photograph.
-Dimensions were chosen at the location of common body fat deposits and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptrons that estimated BMI -- one model for the front photograph, another model for the side photograph, and final model that compensated for errors between the front and side estimations, and was the final output of the program.
+The application had a layer that performed various feature extraction on the images, and a layer that estimated BMI using machine learning.
+The dataset used to train the machine learning layer consisted of 465 anonymised people's photographs.
+The program detected a reference object of known dimensions located in each photograph, and subsequently estimated the dimensions of the person in the photograph.
+Dimensions were chosen at the location of common body fat deposits and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptron (MLP) models that estimated BMI -- one for the front photograph, another for the side photograph, and finally, one that compensated for errors between the front and side estimations, and was the final output of the program.
 The results of the final model BMI estimation showed a mean estimation accuracy ranging between 79\% and 92\% for the various categories of BMI, namely Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
 Furthermore, the spread of error showed that ***\% of participants had an error less than ***\%, with a mean absolute error of ***, and standard deviation of ***.
 \end{abstract}
@@ -34,30 +35,28 @@ Furthermore, the spread of error showed that ***\% of participants had an error 
 \section{Introduction}
 The Body Mass Index (BMI) is a screening tool used to indicate whether one's body mass is healthy for their corresponding height \cite{nhsBMI}.
 Whilst not an accurate diagnostic tool, the BMI provides a healthy body mass range for a particular height as it takes natural body shape variations into account \cite{nhsBMI}.
-Unfortunately, the accurate collection of ones height and mass is time-consuming, especially when considering the time required to collect this data for large amounts of people.
-Furthermore, the distance between rural areas and clinics also inhibit the inhabitants of the area from regular medical checkups, where a medical practitioner might require to measure and track ones height and mass.
-A possible solution to both the above mentioned problems would be the creation of a tool that would provide a medical practitioner with this information without the need for the patient to be physically present.
-The following report presents a study of a potential technique to estimate BMI from a photograph. It also reports on the design and implementation of program that estimates BMI from a photograph using these techniques, which include a mixture of Computer Vision and Machine Learning.
+Unfortunately, the accurate collection of ones height and mass is time-consuming for large amounts of people.
+Furthermore, the distance between rural areas and clinics also prevent inhabitants of that area from regular medical checkups, where a medical practitioner might require to measure and track ones height and mass.
+A solution to both the above mentioned problems would be the creation of a tool that would provide a medical practitioner with this information without the need for the patient to be physically present.
+The following report presents a study of a technique to estimate BMI from a photograph. It also reports on the design and implementation of program that estimates BMI from a photograph using this techniques, which include a mixture of Computer Vision and Machine Learning.
 The School of Electrical and Information Engineering (EIE) have collaborated with the Peri-Natal HIV Research Unit (PHRU) for this project.
 \section{Background}
 \subsection{Project Concept} \label{concept}
-The aim of this project is to estimate the BMI of a person from their photograph.
-This is to be achieved by creating a program which accepts a front and side photograph of a person.
-The program will extract body shape data from the photographs with the use of Computer Vision, and predict one's BMI based on their body shape data using Machine Learning.
+The aim of this project is to estimate the BMI of a person by creating a program which accepts a front and side photograph of that person.
+The program will extract body shape data from the photographs with the use of Computer Vision, and estimate their BMI based on their body shape data using Machine Learning.
 
 The purpose of such a tool has vast applications in the medical field, whether it be used as a time-efficient means of tracking the progress of a disease/disorder that affects ones mass, or for a simple indication of ones own health.
 Furthermore, a possible extension of this tool would be using it to classify which category of BMI one falls into: Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
 
 The success of this project would result in the production of a BMI estimator which precludes the need for a subject to remove their clothes, as well as travel to a clinic for BMI measurement.
-In large rural clinics, where large patient volumes combined with time taken to undress and redress for accurate height and mass measurements, this digital solution may result in a significant reduction in the time taken for consultations.
 Furthermore, this solution would not be affected by measurement errors resulting from incorrect calibration of machinery.
 
 \subsection{Assumptions \& Constraints}
 \begin{itemize}
 	\item As to provide the least chance of a false human body outline being detected, we assume that any person being photographed is staged in front of a uniform background, such as a wall whose colour significantly contrasts with that of the patient and their clothes.
-	It is further assumed that all photographs used to train the machine learning algorithm should abide by the same assumption.
+	All photographs used to train the machine learning algorithm should abide by the same assumption.
 	\item In order to provide a measurement reference, the person in each photograph should be standing next to a reference object (RO) of known dimensions, such as a piece of standard A4 paper. The colour and dimensions of the piece of paper should be the same throughout the training dataset.
-	\item This RO is present in the photographs during any live testing or usage of the application.
+	\item This RO is present in the photographs during testing or usage of the application.
 	\item All subjects in the photographs stand alongside and in line with the RO, i.e. if the RO is stuck to a wall, the subject is standing against the wall.
 	\item The distance between the camera and the subjects being photographed is constant and far enough away to capture the subject's full body photograph.
 	\item Subjects have a maximum height of two meters.
@@ -69,16 +68,16 @@ Furthermore, this solution would not be affected by measurement errors resulting
 	\item The program should provide an average accuracy of 75\% for it to be classified as a potential viable solution.
 	\item To be considered a working prototype, it should provide an average accuracy of 85\%.
 	\item To be considered a completed product, it should provide a minimum average accuracy of 95\% across all age, gender, and mass groups.
-	\item BMI prediction takes place without the need for one to remove their clothes and thus operate with pictures of clothed people.
+	\item BMI estimation can occur with photographs of clothed people.
 	\item The final solution is a robust desktop application that can be easily used by a medical practitioner.
-	\item The solution should be camera-independent and resolution-independent.
+	\item The solution should be camera resolution-independent.
 \end{itemize}
 
 \subsection{Optional Criteria}
 \begin{itemize}
 	\item The software and it's trained neural network models are exported to either a mobile application or desktop executable. In this way, one could select a photograph from their cellphone/desktop gallery and the program could perform estimation on the chosen picture.
 	\item The desktop executable can receive pictures from a connected camera.
-	\item A mobile application would access the cellphone's camera and perform a BMI estimation from a photograph taken in-app. The prediction could either be shown to the user or sent to the medical practitioner directly.
+	\item A mobile application would access the cellphone's camera and perform a BMI estimation from a photograph taken in-app. The estimation could either be shown to the user or sent to the medical practitioner directly.
 	\item Provided that there is sufficient training data, training two separate models for male and female data points would decrease sex bias in the models. This would be to further improve accuracy by accounting for natural variations of body shape between men and women, with the hope of seeing similar statistical variations in BMI across age and sex as seen in Ref. \cite{bmiage}.
 \end{itemize}
 
@@ -118,7 +117,7 @@ The analysis was performed on a dataset of 161 photographs that were used to cre
 The silhouette images were standardised to a particular pixel width without changing aspect ratio, and were thereafter padded appropriately and cropped to a square bounding box.
 The silhouette images were augmented via minimal rotations and width shifts, with the author stating that the model could only train sufficiently with augmentation.
 A rather complicated model consisting of 17 layers was used, details of which can be found in Ref. \cite{bmifromphoto}.
-The results showed the BMI predictions having a correlation of 0.96 with the actual BMI values.
+The results showed the BMI estimations having a correlation of 0.96 with the actual BMI values.
 
 \section{System Design}
 The proposed solution comprises of two subsystems, namely the Extraction layer and the Machine Learning layer.
@@ -161,7 +160,7 @@ Both networks will have been trained to estimate BMI independently until an acce
 The estimated BMI from the Front View and Side View component are then used as inputs into a final neural network, the Error Correction / Compensation model, which performs a weighted averaging between the Front and Side BMI estimations.
 This network will have been trained to estimate BMI by deciding the contribution that the Front and Side view estimates should make towards a final BMI estimation with improved accuracy.
 \section{Training Data Collection}
-As mentioned above, the layer of the system that performs the BMI prediction makes extensive use of neural network models.
+As mentioned above, the layer of the system that performs the BMI estimation makes extensive use of neural network models.
 Thus in order to train these models, a dataset containing photographs of people with their corresponding BMI was required.
 \subsection{Ethics Approval}
 This study was approved by The University of the Witwatersrand Human Research Ethics Committee (Medical), Certificate Number M190539.
@@ -296,13 +295,14 @@ The following errors were circumvented by combining the masks produced by foregr
 \end{itemize}
 Unfortunately there are some errors that could not be accounted for or circumvented, and must be prevented in any future data collection:
 \begin{itemize}
-	\item Taking front and side photographs from an angle such that the RO is seen as behind the person instead of alongside them.
-	\item A more pronounced error of parallax in side photographs due to the RO being a person-width behind the side surface of the person being photographed, resulting in the side dimension extractions being slightly exaggerated.
+	\item Taking front and side photographs from an angle such that the RO is seen as behind the person instead of alongside them, creating a distance perspective error.
+	\item A more pronounced distance perspective error in all side photographs due to the RO being a person-width behind the side surface of the person being photographed.
+	This results in the RO dimensions being slightly under-estimated, and the person's side dimensions being slightly exaggerated.
 \end{itemize}
 
 \section{Findings \& Analysis}
-The models that were described has having the best performance to unseen data in Section \ref{trainingandperformance} was used to make BMI predictions for the entire dataset of 427 people.
-Figures \ref{fig:spread} and \ref{fig:accuracies} show the BMI category composition of the dataset and average accuracy of the final BMI prediction (i.e. from the Compensator model), respectively, for each category.
+The models that were described has having the best performance to unseen data in Section \ref{trainingandperformance} was used to make BMI estimations for the entire dataset of 427 people.
+Figures \ref{fig:spread} and \ref{fig:accuracies} show the BMI category composition of the dataset and average accuracy of the final BMI estimation (i.e. from the Compensator model), respectively, for each category.
 
 \begin{figure}
 	\centering
@@ -318,21 +318,19 @@ This is also seen in the Front and Side model accuracies, as seen in Appendix 5.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{accuracies.png}
-	\caption{Average accuracy of Final BMI Model predictions for total dataset according to BMI categories described in Section \ref{concept}).}
+	\caption{Average accuracy of Final BMI Model estimations for total dataset according to BMI categories described in Section \ref{concept}).}
 	\label{fig:accuracies}
 \end{figure}
 
 Despite this, it appears that the results show there is a defintive relationship between the maximum width and depth of the common areas body fat deposit and BMI.
 A more comprehensive view of the performance of the final model can be seen in the distribution of percentage error in Figure \ref{fig:errorspread}.
 This distribution can also be seen for the Front and Side model -- Figures 2 and 3 in Appendix 5.
-
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{errorspread.png}
 	\caption{Distribution of Percentage Error for BMI Estimations performed on the Full Dataset.}
 	\label{fig:errorspread}
 \end{figure}
-
 One shortcoming of using these accuracies however, is the fact that the Obese category contains data points with a BMI between 30 and appropriately 55.
 The reason for this is the drastically diminishing number of data points in existence with a BMI over 40.
 As expected, these outliers performed poorly in comparison to the categories where the majority of data was located.
@@ -352,9 +350,10 @@ This can be extended in future versions of the program to interactively choose a
 In accordance with Section \ref{error}, as to improve the quality of the training data as well as model performance, the following minor changes must be implemented when creating a dataset for this system in future:
 \begin{itemize}
 	\item There must be at least half a meter of space to the left of the RO in the photograph, as well as to the right of the person in the photograph.
-	Having other objects vertically below the RO or between the persons head and shoulder in the picture puts the data point at risk of being discarded by the program due to its built-in data sanitisation.
+	Having other objects vertically below the RO (especially of the same colour) or between the persons head and shoulder in the picture may interfere with detection.
 	\item Consider making the RO a bright, distinctly coloured object worn on the person.
 	This would improve the system's ability to locate the RO by first detecting the person, and using the same ROI to find the RO.
+	This would also significantly reduce the distance perspective error discussed in Section \ref{error}.
 \end{itemize}
 With regards to the speed of execution and resource usage of the program, the following changes should also be implemented in future:
 \begin{itemize}
@@ -365,6 +364,12 @@ With regards to the speed of execution and resource usage of the program, the fo
 \end{itemize}
 
 \section{Conclusion}
+The results of a study exploring a new technique to estimate BMI from a photograph has been presented, along with the design and implementation of a software system that used this technique for BMI estimation.
+The technique involved relating BMI to features such as the estimated dimensions of common areas of body fat, silhouette area, and height.
+The above features were extracted using Computer Vision to perform Object Detection, Image Segmentation, Foreground Extraction and Size Estimation on front and side photographs of people.
+The features were then used to train three MLP models to perform BMI estimation.
+The BMI estimation results of the final model showed a mean estimation accuracy ranging between 79\% and 92\% for the BMI categories.
+Furthermore, the spread of error showed that ***\% of participants had an error less than ***\%, with a mean absolute error of ***, and standard deviation of ***.
 
 \section{Acknowledgements}
 The author would like to extend his gratitude to the following people:
@@ -380,6 +385,6 @@ The author would like to extend his gratitude to the following people:
 \bibliography{references}
 \end{document}
 
-%% RECOMM: IN FUTURE, NO paralax error because side photos have the side of people in front of the ref object
 % ReLu neuron death
 % interactive black threshold chooser
+% REFERENCE OUR REPO
