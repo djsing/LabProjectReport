@@ -21,7 +21,14 @@
 ]
 
 \begin{abstract}
-The following reports the findings of a study used to design and implement an application used to estimate Body Mass Index from a photograph.
+The following reports the findings of a study that was used to design and implement an application used to estimate Body Mass Index from a photograph.
+The total duration of the study, design and implementation of the application was six weeks.
+The application had a layer that performed various feature extraction on the images, as well as a layer that performed BMI estimation using machine learning.
+The dataset used to train the machine learning layer consisted of 465 sets of front and side photographs of a person, along with their height, mass, age and sex.
+The program detected a reference object of known dimensions (in this case a black piece of cardboard) located in each photograph, and subsequently estimated the dimensions of the person in the photograph.
+Dimensions were chosen at the location of common body fat deposits and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptrons that estimated BMI -- one model for the front photograph, another model for the side photograph, and final model that compensated for errors between the front and side estimations, and was the final output of the program.
+The results of the final model BMI estimation showed a mean estimation accuracy ranging between 79\% and 92\% for the various categories of BMI, namely Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
+Furthermore, the spread of error showed that ***\% of participants had an error less than ***\%, with a mean absolute error of ***, and standard deviation of ***.
 \end{abstract}
 
 \section{Introduction}
@@ -76,6 +83,9 @@ Furthermore, this solution would not be affected by measurement errors resulting
 \end{itemize}
 
 \section{Literature Review}
+Before designing the final solution, various literature was consulted.
+The following literature were those most relevant to the estimation of BMI or relevant to the design choices made, as described in the succeeding sections of this report.
+Further literature was consulted, the findings of which can be seen in the "Literature Review" section of Appendix 3.
 \subsection{Weight and Diameter Estimation of Apples}
 Comert et al. aims to estimate the mass of an apple through image processing and machine learning techniques \cite{comert}.
 The process involves performing edge detection on the original image using the Prewitt edge extraction algorithm, which creates a binary image containing the edges in the original image.
@@ -92,18 +102,6 @@ Feature extraction is carried out such that the area and diameter of the apple a
 This feature extraction would then be performed on a set of apple photographs whose masses were known.
 Thereafter, the diameter and area of the apples were related to their recorded masses using a linear regression model.
 This method reported a 96.5\% accuracy of estimation \cite{comert}.
-
-\subsection{Weight Estimation Using Image Analysis and Statistical Modelling}
-Similar to the requirements of the BMI system, Kollis et al. discusses a robust image analysis based mass estimation of pigs in large scale livestock farming \cite{kollis2007weight}. 
-The software of choice for image processing is MATLAB in which the Image Processing Toolbox V4.1 is used.
-Object detection occurred through comparison between the camera environment without the pig and with the pig.
-This results in a binary image that undergoes segmentation, filtering and opening to get a clear image for feature extraction.
-
-Feature extraction in this paper is particularly relevant to this report as the body shape of the pigs is more complex than the features of apples described by Ref. \cite{comert} in the previous section. 
-The feature extraction method is comprised of the skeletonisation function in MATLAB which generates a skeletal structure of the object in question.
-
-Using this process the spine (main branch) is used to estimate the length of the pig by counting the pixels which comprise the spine.
-Thereafter, the estimated spine length and recorded pig masses were related using a linear regression model.
 
 \subsection{Types of Neural Networks}
 Mehta discusses the various types of neural networks and what applications in which they prove to be useful \cite{mehta_2019}. 
@@ -252,7 +250,7 @@ A visual representation of the entire Extraction Layer can be seen in Figure \re
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{segbeforeafter.png}
+	\includegraphics[width=0.6\linewidth]{segbeforeafter.png}
 	\caption{Example photograph (left), reference object segmentation (middle), person segmentation (right).}
 	\label{fig:segbeforeafter}
 \end{figure}
@@ -308,7 +306,7 @@ Figures \ref{fig:spread} and \ref{fig:accuracies} show the BMI category composit
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{spread.png}
+	\includegraphics[width=0.6\linewidth]{spread.png}
 	\caption{Number of people in dataset according to BMI categories described in Section \ref{concept}).}
 	\label{fig:spread}
 \end{figure}
@@ -319,7 +317,7 @@ This is also seen in the Front and Side model accuracies, as seen in Appendix 5.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{accuracies.png}
+	\includegraphics[width=0.6\linewidth]{accuracies.png}
 	\caption{Average accuracy of Final BMI Model predictions for total dataset according to BMI categories described in Section \ref{concept}).}
 	\label{fig:accuracies}
 \end{figure}
@@ -330,7 +328,7 @@ This distribution can also be seen for the Front and Side model -- Figures 2 and
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{errorspread.png}
+	\includegraphics[width=0.6\linewidth]{errorspread.png}
 	\caption{Distribution of Percentage Error for BMI Estimations performed on the Full Dataset.}
 	\label{fig:errorspread}
 \end{figure}
