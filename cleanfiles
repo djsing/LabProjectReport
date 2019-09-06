@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -v *.out *.aux *.bbl *.blg *.log  main.pdf appendix1.pdf appendix3.pdf appendix5.pdf
+rm -v *.out *.aux *.bbl *.blg *.log  main.pdf appendix1.pdf appendix3.pdf appendix4.pdf appendix5.pdf

@@ -8,6 +8,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[hyphens]{url}
 \usepackage{hyperref}
+\usepackage{ragged2e}
 \setlength{\textfloatsep}{3pt}
 \setlength{\floatsep}{3pt}
 \setlength{\parindent}{0pt}
@@ -20,28 +21,26 @@
 \vspace{6pt}
 \linebreak
 \large{Darrion Singh (1056673)}
-\vspace{6pt}
-]
-
-\begin{abstract}
-The following reports the findings of a study that was used to design and implement an application used to estimate Body Mass Index from a photograph.
-The total duration of the study, design and implementation of the application was six weeks.
-The application had a layer that performed various feature extraction on the images, and a layer that estimated BMI using machine learning.
-The dataset used to train the machine learning layer consisted of 465 anonymised people's photographs.
+\justify
+\small{\textbf{Abstract:} The following reports the design and implementation of an application used to estimate Body Mass Index from a photograph.
+The total duration of the project was six weeks.
+The application consistd of a feature extraction layer and a machine learning layer.
+The dataset collected to train the machine learning layer consisted of 465 anonymised people's photographs.
 The program detected a reference object of known dimensions located in each photograph, and subsequently estimated the dimensions of the person in the photograph.
-Dimensions were chosen at the location of common body fat deposits and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptron (MLP) models that estimated BMI -- one for the front photograph, another for the side photograph, and finally, one that compensated for errors between the front and side estimations, and was the final output of the program.
+Dimensions were chosen at the location of common body fat deposits, and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptron (MLP) models that estimated BMI -- one for the front photograph, another for the side photograph, and finally, one that compensated for errors between the front and side estimations, and was the final output of the program.
 The results of the final model BMI estimation showed a mean estimation accuracy ranging between 79\% and 92\% for the various categories of BMI, namely Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
-Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\% with a mean absolute error of ***, and standard deviation of ***.
-\end{abstract}
+Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\% with a mean absolute error of ***, and standard deviation of ***.}
+\vspace{3pt}
+]
 
 \section{Introduction}
 The Body Mass Index (BMI) is a screening tool used to indicate whether one's body mass is healthy for their corresponding height \cite{nhsBMI}.
 Whilst not an accurate diagnostic tool, the BMI provides a healthy body mass range for a particular height as it takes natural body shape variations into account \cite{nhsBMI}.
-Unfortunately, the accurate collection of ones height and mass is time-consuming for large amounts of people.
-Furthermore, the distance between rural areas and clinics also prevent inhabitants of that area from regular medical checkups, where a medical practitioner might require to measure and track ones height and mass.
+Unfortunately, the distance between rural areas and clinics prevent inhabitants of that area from regular medical checkups, where a medical practitioner might require to measure and track ones height and mass.
 A solution to both the above mentioned problems would be the creation of a tool that would provide a medical practitioner with this information without the need for the patient to be physically present.
-The following report presents a study of a technique to estimate BMI from a photograph. It also reports on the design and implementation of program that estimates BMI from a photograph using this techniques, which include a mixture of Computer Vision and Machine Learning.
+The following report presents the design and implementation of program that estimates BMI from a front and side photograph using a mixture of Computer Vision and Machine Learning.
 The School of Electrical and Information Engineering (EIE) have collaborated with the Peri-Natal HIV Research Unit (PHRU) for this project.
+
 \section{Background}
 \subsection{Project Concept} \label{concept}
 The aim of this project is to estimate the BMI of a person by creating a program which accepts a front and side photograph of that person.
@@ -149,7 +148,7 @@ Six features are extracted from each pixel mask:
 	\item The maximum thickness of their upper leg region (thigh) in meters.	
 \end{itemize}
 Note that from front images, the 'thickness' is hereafter referred to as 'width' whilst from the side images, 'thickness' is hereafter referred to as 'depth'.
-The four body regions mentioned above have been chosen strategically as to represent common areas of body fat deposit. %*************************FIND REFERENCE*************************************************
+The four body regions mentioned above have been chosen strategically as to represent common areas of body fat deposit.
 In other words, this study explores the use of Computer Vision and Machine Learning to relate the common regions of body fat deposit to BMI by extracting information about these regions from photographs.
 The output of the Extraction layer is two vectors, namely the front view vector (FVV) and side view vector (SVV).
 Both FVV and SVV will contain the above mentioned features extracted from their respective photograph.
@@ -192,7 +191,7 @@ This characteristic, despite only being recorded for statistical purposes, is by
 Knowing the distribution of the age of the subjects may provide a range of ages where the program is likely to provide the most accurate estimation.
 \end{itemize}
 With the ultimate aim in mind for this program to be a universal BMI estimator, it was encouraged that the data-set of subjects who volunteer to be photographed be spread in terms of sex, ethnicity and age.
-The final dataset that was used contained 465 photographs.
+The final dataset that was used contained 465 photographs, taken with multiple cameras.
 
 \section{Methodology}
 Drawing from the previously discussed literature, the following sections describe methodology employed to achieve each component and subsystem implementation described above.
@@ -204,8 +203,8 @@ Two methods have been used to extract the RO from the photograph, both of which 
 Method One is the primary operation, while Method Two is activated if Method One fails during runtime.
 Method One is as follows:
 \begin{itemize}
-	\item Knowing that the RO is black, the image was filtered of all pixels whose 8-bit colour fell outside of the gray range of 0 -- 150, where 0 is pure black and 255 is white, such that the remaining pixels were considered as the 'black' pixels of the image.
-	The value of 150 was chosen experimentally, as to account for lighting in the photographs causing the RO to appear slightly lighter than it should.
+	\item Knowing that the RO is black, the image was filtered of all pixels whose 8-bit colour fell outside of the gray range of 0 -- 130, where 0 is pure black and 255 is white, such that the remaining pixels were considered as the 'black' pixels of the image.
+	The value of 130 was chosen experimentally, as to account for lighting in the photographs causing the RO to appear slightly lighter than it should.
 	\item The filtering produced a binary image which showed the positions of black pixels in the image.
 	Edge detection (using the OpenCV implementation of the Canny algorithm) was performed on the filtered image, returning all contours in the image.
 	\item OpenCV's Polygon approximation was then performed on the contours that were returned.
@@ -250,7 +249,7 @@ This method of data extraction and composition of FVV and SVV were inspired by R
 A visual representation of the entire Extraction Layer can be seen in Figure \ref{fig:segbeforeafter}.
 \begin{figure}
 	\centering
-	\includegraphics[width=0.6\linewidth]{segbeforeafter.png}
+	\includegraphics[width=0.5\linewidth]{segbeforeafter.png}
 	\caption{Example photograph (left), reference object segmentation (middle), person segmentation (right).}
 	\label{fig:segbeforeafter}
 \end{figure}
@@ -280,7 +279,7 @@ The final Model Loss and Training Method for the best performing models were as 
 Note that the Front and Side View models were first trained, and the best performing models were used to generate data to train the Compensation model.
 
 The final architecture of the Front model was ******, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
-The final architecture of the Side and Compensation models were ****** and ******* respectively. The full implementation of the system can be found at Ref \cite{repo}.
+The final architecture of the Side and Compensation models were ****** and ******* respectively. The full implementation of the system can be found at Ref \cite{repo}, and features a graphical user interface (GUI) for desktop computers.
 
 \section{Sources of Error} \label{error}
 As expected when performing feature extraction on a photographic dataset, the system design either had to account for or circumvent various errors in the dataset.
@@ -381,10 +380,13 @@ With regards to the speed of execution and resource usage of the program, the fo
 \section{Conclusion}
 The results of a study exploring a new technique to estimate BMI from a photograph has been presented, along with the design and implementation of a software system that used this technique for BMI estimation.
 The technique involved relating BMI to features such as the estimated dimensions of common areas of body fat, silhouette area, and height.
-The above features were extracted using Computer Vision to perform Object Detection, Image Segmentation, Foreground Extraction and Size Estimation on front and side photographs of people.
+The above features were extracted using Computer Vision to perform Object Detection, Image Segmentation, Foreground Extraction and Size Estimation on front and side photographs of fully clothed people.
 The features were then used to train three MLP models to perform BMI estimation.
-The BMI estimation results of the final model showed a mean estimation accuracy ranging between 79\% and 92\% for the BMI categories.
-Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\%, with a mean absolute error of ***, and standard deviation of ***.
+The BMI estimation results of the final model showed a mean estimation accuracy ranging between 79\% and 92\% for the BMI categories, fulfilling the minimum success criteria of 75\% mean accuracy.
+Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\%.
+Finally, this software has been presented with a GUI for medical practitioners to easily use.
+It was noted that an increase in the size of the dataset as well as a revised placement and choice of reference object would result in more accurate feature extraction.
+Hopefully in future, the additional features of height and mass estimation can be used alongside the BMI model to even more accurately determine these important metrics of health.
 
 \section{Acknowledgements}
 The author would like to extend his gratitude to the following people:
@@ -392,7 +394,8 @@ The author would like to extend his gratitude to the following people:
     \item Sachin Govender (1036148) for his contribution, particularly to the Machine Learning layer of the system.
     His findings can be seen in Ref \cite{sachin}.
     \item Prof. Scott Hazelhurst from the University of the Witwatersrand, who supervised this study.
-    \item Dr. Neil Martinson from the Peri-Natal HIV Research Unit.
+    \item Dr. Neil Martinson from the Peri-Natal HIV Research Unit, who co-supervised this project.
+    Dr. Martinson provided clinical research staff to assist us with this study.
     The PHRU have been invaluable to this study due to their contribution to data collection.
 \end{itemize}
 

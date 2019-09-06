@@ -1,1 +1,121 @@
-% Minutes
+\documentclass[conference, onecolumn]{IEEEtran}
+\usepackage{textcomp}
+\usepackage{amsmath}
+\usepackage{gensymb}
+\usepackage[T1]{fontenc}
+\setlength{\parindent}{0pt}
+\title{Appendix 4: Project Meeting Minutes}
+\begin{document}
+\maketitle
+The following minutes record meetings between Darrion Singh (1056673), Sachin Govender (1056673) and Prof. Scott Hazelhurst, who supervised this project.
+All changes to the attendees of the meetings have been recorded under the heading "Changes to Attending".
+
+\rule{\linewidth}{2pt}
+
+Date: 19 March 2019
+
+Location: Prof. Hazelhurst's Office, Chamber of Mines Building, University of the Witwatersrand.
+\begin{itemize}
+	\item Enquired about potentially acquiring Prof. Rubin's dataset for machine learning component of project.
+	\item Prof. Hazelhurst informed us that he would confer with Prof. Rubin about obtaining his dataset, and that we should make contact with Prof. Rubin to confirm.
+	\item Prof. Hazelhurst informed us of the processes involved for obtaining ethics approval for the study, advising us to aim for the early May ethics application.
+	\item Prof. Hazelhurst informed us that if we obtain Prof. Rubin's dataset, even if the dataset may not necessarily require ethics approval, we still require to make an application.
+	\item Prof. Hazelhurst provided the following preliminary ideas:
+	\begin{itemize}
+		\item The person in the photograph should some standard object on either side of them such as two brightly coloured balls on either side of them.
+		\item The program should detect the ball as a reference object.
+	\end{itemize}
+\end{itemize}
+
+\rule{\linewidth}{2pt}
+
+Date: 2 May 2019
+
+Location: Cafeteria, Wits Medical School.
+
+Changes to Attending: Dr. Neil Martinson from the Peri-Natal HIV Research Unit Present in attendance.
+\begin{itemize}
+	\item Prof. Hazelhurst informed us that after conferring with Prof. Rubin, it was confirmed that the dataset was unavailable.
+	\item Dr. Martinson offered his research clinics and clinical staff to us for the purpose of data collection.
+	\item The issue of whether participants should be clothed was discussed and it was decided that all participants should be clothed as to contribute to creating a robust solution.
+	\item The group members expressed a concern that asking people to disrobe would make ethics approval significantly harder.
+	\item It was decided that only adults could participate in the study.
+	\item Dr. Martinson informed the group that they would need to go to the clinic sites and train the staff to collect photographs correctly.
+	\item Dr. Martinson informed the group that they should create a Standard Operating Procedure (SOP) document.
+	\item It was decided that a reasonable number of participants would be 500.
+	\item It was decided that anonymity would be achieved by the use of facial masks.
+	\item Dr. Martinson was requested to provide a letter of approval for the study to be conducted at PHRU clinics.
+\end{itemize}
+
+\rule{\linewidth}{2pt}
+
+Date: 15 July 2019
+
+Location: Prof. Hazelhurst's Office, Chamber of Mines Building, University of the Witwatersrand.
+
+Changes to Attending: Dr. Neil Martinson has phoned in for the meeting.
+\begin{itemize}
+	\item Following email confirmation of receiving the Ethics Certificate, Dr. Martinson has suggested Thursday 18th July and Friday 19th July to visit the Klerksdorp and Soweto sites, respectively.
+	\item Dr. Martinson has asked to print out the SOP, Certificate of Ethics Approval in order to create a site file for each site.
+	\item It was decided that data collection should proceed for at least four weeks, starting on Monday 22 July.
+	\item Prof. Hazelhurst began a brief review of the project plan with the group.
+	\item The preliminary idea for a reference object was presented as a piece of paper being stuck next to the person in the photograph.
+	\item Prof. Hazelhurst commented on the fact that people using this application may not have walls or the means to stick a piece of paper on walls.
+	\item The group informed Prof. Hazelhurst that the program's current method of object detection is highly sensitive to objects in contact.
+	\item Prof. Hazelhurst commented that if two reference balls are used, each with a different colour, the coloured pixels could be detected in the photograph without a problem.
+	\item The group commented that the choice of a reference object not being in contact with the person decreases the chance of the object being obscured from view.
+	\item The idea of splitting the input into separate front, side and compensation models was presented.
+	\item Prof. Hazelhurst commented that the group should consider using a single model with both front and side inputs given to it, as the model effectively aims to create a three dimensional relationship between the inputs.
+	\item The group commented that they were attempting to spilt the input data in order to prevent model overtraining due to the small dataset and large number of inputs.
+\end{itemize}
+
+\rule{\linewidth}{2pt}
+
+Date: 26 July 2019
+
+Location: Sydney Brenner Institute of Molecular Biology, University of the Witwatersrand
+\begin{itemize}
+	\item The group presented prototype of the feature extraction from test images.
+	\item The feature extraction consisted of a pixel mask of both the reference object and person, as well as a print out of the dimensions along the persons height.
+	\item The group noted that the use of a CNN instead of contour detection resulted in a smooth silhouette in the pixel mask, and was not representative of the persons actual contour.
+	\item The group informed Prof. Hazelhurst that the machine learning element of the project was still in testing stages, and mock data was being used to simulate model performance.
+	\item It was noted that by the end of the weekend, it was expected that feature data generation should be complete, provided there are no problems when moving to the clinic photographs.
+\end{itemize}
+
+\rule{\linewidth}{2pt}
+
+Date: 14 August 2019
+
+Location: Prof. Hazelhurst's Office, Chamber of Mines Building, University of the Witwatersrand.
+\begin{itemize}
+	\item The group presented preliminary results for the model training only using the dataset gathered at Wits.
+	\item The group presented an improved method of feature extraction that combined the masks of the CNN and Foreground extraction techniques in response to reduced performance due to poor clinic photographs.
+	\item The group noted that the core functionality of the project was completed, and all that remained was to find the best performing model.
+\end{itemize}
+
+\rule{\linewidth}{2pt}
+
+Date: 16 August 2019
+
+Location: Prof. Hazelhurst's Office, Sydney Brenner Institute of Molecular Biology, University of the Witwatersrand
+
+Changes to Attending: Sachin Govender unable to attend due to family responsibility.
+\begin{itemize}
+	\item Prof. Hazelhurst commented that during this time the group should take advantage of being ahead of schedule, and reflect on any changes that should be made in the closing stages of the project.
+	\item Prof. Hazelhurst noted that for the sake of reporting the findings of the program, statistical measures should be written in, and that simply reporting a accuracy was not adequate.
+	\item Prof. Hazelhurst commented on the need for good documentation practices, such as placing the code on GitHub and documenting the repository at least using a readme file in markdown, as well as testing.
+	\item Darrion Singh informed Prof. Hazelhurst that a basic user interface was in development in preparation for open day and should be completed shortly.
+\end{itemize}
+
+\rule{\linewidth}{2pt}
+
+Date: 23 August 2019
+
+Location: Prof. Hazelhurst's Office, Chamber of Mines Building, University of the Witwatersrand.
+\begin{itemize}
+	\item The group informed Prof. Hazelhurst that a working demonstration for Open Day including the user interface and the best performing models were ready.
+	\item Prof. Hazelhurst requested that the group send him a preliminary poster for open day as soon as possible.
+	\item The group commented that Prof. Hazelhurst would receive the preliminary poster on Monday 26 August or Tuesday 27 August.
+	\item Prof. Hazelhurst informed the group that documentation was not necessary for Open Day but should be completed by project hand-in.
+\end{itemize}
+\end{document}

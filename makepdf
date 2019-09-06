@@ -14,6 +14,9 @@ bibtex appendix3
 echo -ne '\n' | pdflatex appendix3
 echo -ne '\n' | pdflatex appendix3
 
+echo "Making Appendix 4"
+echo -ne '\n' | pdflatex appendix4
+
 echo "Making Appendix 5"
 echo -ne '\n' | pdflatex appendix5
 
