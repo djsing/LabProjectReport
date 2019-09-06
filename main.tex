@@ -29,7 +29,7 @@ The dataset used to train the machine learning layer consisted of 465 anonymised
 The program detected a reference object of known dimensions located in each photograph, and subsequently estimated the dimensions of the person in the photograph.
 Dimensions were chosen at the location of common body fat deposits and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptron (MLP) models that estimated BMI -- one for the front photograph, another for the side photograph, and finally, one that compensated for errors between the front and side estimations, and was the final output of the program.
 The results of the final model BMI estimation showed a mean estimation accuracy ranging between 79\% and 92\% for the various categories of BMI, namely Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
-Furthermore, the spread of error showed that ***\% of participants had an error less than ***\%, with a mean absolute error of ***, and standard deviation of ***.
+Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\% with a mean absolute error of ***, and standard deviation of ***.
 \end{abstract}
 
 \section{Introduction}
@@ -262,7 +262,8 @@ The models were evaluated by a weighted scoring system that took the maximum dev
 MAE (measured in BMI) was considered as the main metric of model loss, since in this particular application, the accuracy of individual results was more important than evaluating the spread of BMI estimations \cite{bmifromface}.
 
 \subsubsection{Training and Final Performance} \label{trainingandperformance}
-Before training, 20\% of the original dataset was removed to be used later as unseen data during model evaluation.
+The program filtered the dataset of features of points that contained errors from the Extraction Layer, leaving 427 points in the feature dataset.
+Before training, 20\% of the feature dataset was removed to be used later as unseen data during model evaluation.
 The remaining data was used with both the Classical Test-Train split and (Stratified) k-Fold cross validation methods to train the models.
 The Classical method used a 70/30 train/test split for training, whilst the Cross Validation methods used 10 folds.
 
@@ -277,7 +278,7 @@ The final Model Loss and Training Method for the best performing models were as 
 \end{itemize}
 Note that the Front and Side View models were first trained, and the best performing models were used to generate data to train the Compensation model.
 
-The final architecture of the Front model was 4-3-2-1, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
+The final architecture of the Front model was ******, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
 The final architecture of the Side and Compensation models were ****** and ******* respectively.
 
 \section{Sources of Error} \label{error}
@@ -303,32 +304,32 @@ Unfortunately there are some errors that could not be accounted for or circumven
 \section{Findings \& Analysis}
 The models that were described has having the best performance to unseen data in Section \ref{trainingandperformance} was used to make BMI estimations for the entire dataset of 427 people.
 Figures \ref{fig:spread} and \ref{fig:accuracies} show the BMI category composition of the dataset and average accuracy of the final BMI estimation (i.e. from the Compensator model), respectively, for each category.
-
 \begin{figure}
-	\centering
-	\includegraphics[width=0.6\linewidth]{spread.png}
+    \centering
+    \begin{minipage}[b]{0.235\textwidth}
+    	\includegraphics[width=\linewidth]{spread.png}
 	\caption{Number of people in dataset according to BMI categories described in Section \ref{concept}).}
 	\label{fig:spread}
+    \end{minipage}
+    \hspace{0.1cm}
+    \begin{minipage}[b]{0.235\textwidth}
+	\includegraphics[width=\linewidth]{accuracies.png}
+	\caption{Average accuracy of Final BMI Model estimations for total dataset according to BMI categories described in Section \ref{concept}).}
+	\label{fig:accuracies}
+    \end{minipage}
 \end{figure}
 
 The first thing to be noted from Figure \ref{fig:spread} is the sheer under-representation of the Underweight population in the dataset.
 It thus comes as no surprise that the lowest BMI estimation accuracy comes from this group.
 This is also seen in the Front and Side model accuracies, as seen in Appendix 5.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.6\linewidth]{accuracies.png}
-	\caption{Average accuracy of Final BMI Model estimations for total dataset according to BMI categories described in Section \ref{concept}).}
-	\label{fig:accuracies}
-\end{figure}
-
-Despite this, it appears that the results show there is a defintive relationship between the maximum width and depth of the common areas body fat deposit and BMI.
+Despite this, it appears that the results show there is a definitive relationship between the maximum width and depth of the common areas body fat deposit and BMI.
 A more comprehensive view of the performance of the final model can be seen in the distribution of percentage error in Figure \ref{fig:errorspread}.
 This distribution can also be seen for the Front and Side model -- Figures 2 and 3 in Appendix 5.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{errorspread.png}
-	\caption{Distribution of Percentage Error for BMI Estimations performed on the Full Dataset.}
+	\caption{Distribution of Percentage Error for Final Model BMI Estimations performed on the Full Dataset.}
 	\label{fig:errorspread}
 \end{figure}
 One shortcoming of using these accuracies however, is the fact that the Obese category contains data points with a BMI between 30 and appropriately 55.
@@ -369,7 +370,7 @@ The technique involved relating BMI to features such as the estimated dimensions
 The above features were extracted using Computer Vision to perform Object Detection, Image Segmentation, Foreground Extraction and Size Estimation on front and side photographs of people.
 The features were then used to train three MLP models to perform BMI estimation.
 The BMI estimation results of the final model showed a mean estimation accuracy ranging between 79\% and 92\% for the BMI categories.
-Furthermore, the spread of error showed that ***\% of participants had an error less than ***\%, with a mean absolute error of ***, and standard deviation of ***.
+Furthermore, the spread of error showed that 60.6\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\%, with a mean absolute error of ***, and standard deviation of ***.
 
 \section{Acknowledgements}
 The author would like to extend his gratitude to the following people:
