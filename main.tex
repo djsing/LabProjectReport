@@ -29,7 +29,8 @@ The dataset collected to train the machine learning layer consisted of 465 anony
 The program detected a reference object of known dimensions located in each photograph, and subsequently estimated the dimensions of the person in the photograph.
 Dimensions were chosen at the location of common body fat deposits, and along with person's estimated silhouette area and estimated height, were used to train three Multilayer Perceptron (MLP) models that estimated BMI -- one for the front photograph, another for the side photograph, and finally, one that compensated for errors between the front and side estimations, and was the final output of the program.
 The results of the final model BMI estimation showed a mean estimation accuracy ranging between 79\% and 92\% for the various categories of BMI, namely Underweight (< 18.5), Healthy (18.5 -- 25), Overweight (25 -- 30), or Obese (> 30).
-Furthermore, the spread of error showed that about 61\% of participants had an error less than 10\%, and about 89\% of participants had an error less than 25\% with a mean absolute error of ***, and standard deviation of ***.}
+Furthermore, the spread of error showed that about 61\% of participants had an error less than 10\%, and about 89\% of participants had an error less than 25\%.
+Predictions on the total dataset had a mean absolute error of 3.2, and standard deviation of 3.9.}
 \vspace{6pt}
 ]
 
@@ -260,16 +261,14 @@ The Classical method used a 70/30 train/test split for training, whilst the Cros
 Different models were trained using different shuffles of data as well as different training parameters such as learning rate, batch size and number of epochs.
 At the end of each complete training cycle, the models were evaluated by exposing them to the unseen data.
 The model which had the lowest combination of MAE and maximum deviation when exposed to completely unseen data was saved as having the best performance.
-The final Model Loss and Training Method for the best performing models were as follows:
+The final Validation Model Loss and Training Method for the best performing models were as follows:
 \begin{itemize}
 \item Front: Trained using Stratified Cross Validation using 10 folds, Mean Absolute Error (MAE) — 3.32
 \item Side: Trained using Cross Validation using 10 folds, MAE -- 2.77
 \item Compensation: Trained using the Classical Test/Train Split, MAE -- 2.58
 \end{itemize}
 Note that the Front and Side View models were first trained, and the best performing models were used to generate data to train the Compensation model.
-
-The final architecture of the Front model was ******, i.e. four neurons in the input layer, three in the first hidden layer, two in the second hidden layer, and one in the output layer.
-The final architecture of the Side and Compensation models were ****** and ******* respectively. The full implementation of the system can be found at Ref \cite{repo}, and features a graphical user interface (GUI) for desktop computers.
+The full implementation of the system can be found at Ref \cite{repo}, and features a graphical user interface (GUI) for desktop computers.
 
 \section{Sources of Error} \label{error}
 As expected when performing feature extraction on a photographic dataset, the system design either had to account for or circumvent various errors in the dataset.
@@ -294,6 +293,7 @@ Unfortunately there are some errors that could not be accounted for or circumven
 \section{Findings \& Analysis}
 The models that were described has having the best performance to unseen data in Section \ref{trainingandperformance} was used to make BMI estimations for the entire dataset of 427 people.
 Figures \ref{fig:spread} and \ref{fig:accuracies} show the BMI category composition of the dataset and average accuracy of the final BMI estimation (i.e. from the Compensator model), respectively, for each category.
+Predictions on the total dataset had a mean absolute error of 3.2, and standard deviation of 3.9.
 \begin{figure}
     \centering
     \begin{minipage}[b]{0.235\textwidth}
@@ -316,33 +316,25 @@ As seen, the performance of the Side model to Underweight participants had only 
 
 Despite this, it appears that the results from the final compensation model show there is a definitive relationship between the maximum width and depth of the common areas body fat deposit and BMI, in reference to the well represented areas of the dataset, namely those of Healthy Weight and those Overweight.
 This is seen in the mean estimation accuracy ranging between 79\% and 92\% throughout the BMI categories.
-A more comprehensive view of the performance of the final model can be seen in the tally of percentage error in Figure \ref{fig:errorspread}, and the distribution of error in Figure \ref{fig:errordist}.
+A more comprehensive view of the performance of the final model can be seen in the distribution of error of BMI estimations in Figure \ref{fig:errorspread}.
 
 These figures show that approximately 61\% of all participants had an estimation error of 10\% or less -- the vast majority of which having measurement errors between 0 and 6\%.
-With regards to the success criteria of a minimum mean accuracy of 75\%, these figures show that about 89\% of all participants had estimation error of 25\% or less i.e. an estimation \textit{accuracy} of 75\% or more.
+With regards to the success criteria of a minimum mean accuracy of 75\%, these figures show that about 89\% of all participants had an estimation error of 25\% or less i.e. an estimation \textit{accuracy} of 75\% or more.
 \begin{figure}
 \centering
-\begin{minipage}[b]{0.235\textwidth}
-	\includegraphics[width=\linewidth]{errorspread.png}
+	\includegraphics[width=0.65\linewidth]{errorspread.png}
 	\caption{Frequency of Percentage Error for Final Model BMI Estimations performed on the Full Dataset.}
 	\label{fig:errorspread}
-	\end{minipage}
-\hspace{0.1cm}
-\begin{minipage}[b]{0.235\textwidth}
-	\includegraphics[width=\linewidth]{errorspread.png}
-	\caption{Distribution of Percentage Error for Final Model BMI Estimations performed on the Full Dataset.}
-	\label{fig:errordist}
-	\end{minipage}
 \end{figure}
 
-One misrepresentation caused by these accuracies however, is that there are approximately five people with a BMI of over 45.
+One notable misrepresentation shown by Figure \ref{fig:accuracies} however, is that there are approximately five people with a BMI over 45, seen in the data scatters in Appendix 5.
 As expected, these outliers performed poorly in comparison to the categories where the majority of data was located, and has thus exaggerated the average error of the Obese category.
-A better representation would be to evaluate the accuracies between a BMI of 30 and 40, as they are better represented in the dataset, and extend the remaining points to differing levels of obesity.
+A better representation would be to evaluate the accuracies between an Obese BMI of 30 and 40, as they are better represented in the dataset, and extend the remaining points to differing levels of obesity.
 
-Figure 19 in Appendix 5 shows a slight 'flattening' or constant prediction across a small range of inputs.
+Finally, we see that Figure 19 in Appendix 5 shows a slight 'flattening' or constant prediction across a small range of inputs.
 This is most likely due to 'ReLu Neuron Death', which occurs when a ReLu-activated neuron receives an overall negative input, causing it to produce zero \cite{reludeath}.
-It then follows that the constant output is produced since the constant bias term makes the majority (if not all) of the contribution to the output.
-Alternatives that mitigate this are the Leaky/Parametric ReLu functions \cite{reludeath}.
+It then follows that the constant output is produced since the constant bias term in a layer makes the majority (if not all) of the contribution to the output.
+Alternatives that mitigate this are the Leaky/Parametric ReLu functions \cite{reludeath}, and should be considered in future to prevent this phenomenon.
 
 \section{Additional Features}
 The program allows for height and mass models to be trained, as to provide another means of BMI estimation.
@@ -350,6 +342,16 @@ The training and evaluation is the same as described above, producing the highes
 
 The program also provides the user with the option to visualise the data being extracted from the image for the purpose of error detection.
 This can be extended in future versions of the program to interactively choose a reference object in the photograph.
+
+\section{Workflow and Project Management}
+Appendix 1 contains the Division of Work, and Appendix 3 contains the original project schedule and allocated resources, all of which remained unchanged during the course of the project.
+The project cost breakdown can be found in Appendix 5.
+However it is worth noting that during the time allocated for Image Processing and Neural Network Testing, shown in Appendix 3, multiple extra tasks were completed, putting the group slightly ahead of schedule.
+This included the Additional Features, unit testing on all non-library dependant elements of the software, and the design of the GUI for desktop use.
+
+Using Git as source control, each group member worked on two separate trunks for each program layer.
+Upon completing a task, the other group member reviewed the branch and approved merges into the master-branch when satisfied.
+The use of GitKraken, which has a built-in own difference viewer, precluded the need to make use of pull requests on GitHub.
 
 \section{Recommendations}
 In accordance with Section \ref{error}, as to improve the quality of the training data as well as model performance, the following minor changes must be implemented when creating a dataset for this system in future:
@@ -369,15 +371,15 @@ With regards to the speed of execution and resource usage of the program, the fo
 \end{itemize}
 
 \section{Conclusion}
-The results of a study exploring a new technique to estimate BMI from a photograph has been presented, along with the design and implementation of a software system that used this technique for BMI estimation.
-The technique involved relating BMI to features such as the estimated dimensions of common areas of body fat, silhouette area, and height.
-The above features were extracted using Computer Vision to perform Object Detection, Image Segmentation, Foreground Extraction and Size Estimation on front and side photographs of fully clothed people.
+The design and implementation of a software system that estimates BMI from a photograph has been presented.
+This was accomplished by relating BMI to features including the estimated dimensions of common areas of body fat, silhouette area, and height.
+These features were extracted using Computer Vision to perform Object Detection, Image Segmentation, Foreground Extraction and Size Estimation on front and side photographs of fully clothed people.
 The features were then used to train three MLP models to perform BMI estimation.
-The BMI estimation results of the final model showed a mean estimation accuracy ranging between 79\% and 92\% for the BMI categories, fulfilling the minimum success criteria of 75\% mean accuracy.
+The BMI estimation results of the final model showed a mean estimation accuracy ranging between 79\% and 92\% across BMI categories, fulfilling the minimum success criteria of 75\% mean accuracy.
 Furthermore, the spread of error showed that 61\% of participants had an error less than 10\%, and 89\% of participants had an error less than 25\%.
 Finally, this software has been presented with a GUI for medical practitioners to easily use.
 It was noted that an increase in the size of the dataset as well as a revised placement and choice of reference object would result in more accurate feature extraction.
-Hopefully in future, the additional features of height and mass estimation can be used alongside the BMI model to even more accurately determine these important metrics of health.
+Hopefully in future, the additional features of height and mass estimation can be used alongside the BMI model to even more accurately determine these important metrics of health without patients needing to leave their home.
 
 \section{Acknowledgements}
 The author would like to extend his gratitude to the following people:
